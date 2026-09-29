@@ -9,7 +9,7 @@
 *{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:var(--bg);color:var(--text);font:15px/1.65 system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}.app{min-height:100vh;background:var(--bg)}
 header{padding:42px 28px 28px;border-bottom:1px solid var(--line);background:linear-gradient(135deg,var(--panel),var(--panel2))}.wrap{max-width:1200px;margin:auto}.eyebrow{font-weight:700;color:var(--accent);letter-spacing:.08em;text-transform:uppercase;font-size:12px}h1{font-size:clamp(32px,5vw,58px);line-height:1.05;margin:10px 0 12px}h2{font-size:30px;margin:48px 0 12px}h3{font-size:21px;margin:30px 0 8px}p{margin:8px 0 14px}.lead{font-size:18px;max-width:850px;color:var(--muted)}.meta{display:flex;gap:10px;flex-wrap:wrap;margin-top:20px}.pill{padding:6px 10px;border:1px solid var(--line);border-radius:999px;background:var(--panel);font-size:13px}
 .layout{display:grid;grid-template-columns:260px minmax(0,1fr);max-width:1500px;margin:auto}.toc{position:sticky;top:0;height:100vh;overflow:auto;padding:24px 18px;border-right:1px solid var(--line);background:var(--panel)}.toc strong{display:block;margin-bottom:10px}.toc a{display:block;color:var(--muted);text-decoration:none;padding:5px 8px;border-radius:7px}.toc a:hover{background:var(--panel2);color:var(--text)}main{padding:10px 34px 80px;min-width:0}.card{border:1px solid var(--line);border-radius:14px;background:var(--panel);padding:20px;margin:16px 0}.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(400px,1fr));gap:14px}.callout{border-left:4px solid var(--accent);padding:12px 16px;background:var(--panel2);border-radius:8px;margin:16px 0}.warn{border-left-color:#d97706}.ok{border-left-color:#16a34a}code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;background:var(--panel2);padding:2px 5px;border-radius:5px;font-size:.92em}pre{background:var(--code);border:1px solid var(--line);padding:16px;border-radius:10px;overflow:auto;font:13px/1.55 ui-monospace,SFMono-Regular,Menlo,monospace;position:relative}button.copy{position:absolute;right:8px;top:8px;border:1px solid var(--line);background:var(--panel);color:var(--text);border-radius:6px;padding:4px 8px;cursor:pointer}.tok-key{color:#c678dd}.tok-type{color:#61afef}.tok-string{color:#98c379}.tok-comment{color:#7f848e}.tok-number{color:#d19a66}.tok-anno{color:#e5c07b}.tok-method{color:#56b6c2}.tok-json-key{color:#e06c75}.tok-json-value{color:#98c379}table{width:100%;border-collapse:collapse;margin:14px 0}th,td{text-align:left;border-bottom:1px solid var(--line);padding:9px;vertical-align:top}th{background:var(--panel2)}a.ext{color:var(--accent)}.search{width:100%;padding:10px 12px;border:1px solid var(--line);border-radius:8px;background:var(--bg);color:var(--text);margin-bottom:10px}.hidden{display:none!important}.small{font-size:13px;color:var(--muted)}
-@media(max-width:800px){.layout{display:block}.toc{position:relative;height:auto;border-right:0;border-bottom:1px solid var(--line)}main{padding:8px 18px 60px}.toc a{display:inline-block}header{padding:30px 18px 22px}}
+&#64;media(max-width:800px){.layout{display:block}.toc{position:relative;height:auto;border-right:0;border-bottom:1px solid var(--line)}main{padding:8px 18px 60px}.toc a{display:inline-block}header{padding:30px 18px 22px}}
 </style>
 </head>
 <body><div class="app">
@@ -36,13 +36,13 @@ src/main/resources/
   assets/examplemod/...
   data/examplemod/...</pre></section>
 <div class="callout"><b>📍 Где создавать:</b> Java-классы обычно лежат в <code>src/main/java/...</code>, ресурсы — в <code>src/main/resources/...</code>. Папки <code>registry/</code>, <code>event/</code>, <code>client/</code> — удобная организация, но не обязательные имена.</div>
-<section id="workflow"><h2>2.2. Пошаговые цепочки: что делать по порядку</h2><p>Если не знаете, с чего начать объект, идите по цепочке сверху вниз. На каждом шаге сначала добейтесь минимально рабочего результата, а затем переходите к следующему.</p><div class="grid"><div class="card"><h3>🧱 Item</h3><ol><li>Создайте <code>item/RubyItem.java</code>, только если нужно собственное поведение.</li><li>Зарегистрируйте имя в <code>registry/ModItems.java</code>.</li><li>Напишите <code>use(...)</code>, <code>hurtEnemy(...)</code> или другой нужный метод.</li><li>Добавьте <code>assets/modid/models/item/ruby.json</code> и текстуру.</li><li>Добавьте перевод в <code>assets/modid/lang/</code>.</li><li>Запустите клиент и проверьте registry → модель → текстуру → поведение.</li></ol></div><div class="card"><h3>🧱 Block</h3><ol><li>Создайте блок в <code>block/</code>, если нужна своя логика.</li><li>Зарегистрируйте Block в <code>registry/ModBlocks.java</code>.</li><li>Зарегистрируйте BlockItem в <code>registry/ModItems.java</code>.</li><li>Для состояния используйте BlockState; для данных — переходите к BlockEntity.</li><li>Добавьте blockstate/model/texture и перевод.</li><li>Проверьте размещение, ломание, модель и drops.</li></ol></div><div class="card"><h3>⚙️ BlockEntity / машина</h3><ol><li>Создайте <code>block/entity/MachineBlockEntity.java</code>.</li><li>Зарегистрируйте <code>BlockEntityType</code> в <code>registry/ModBlockEntities.java</code>.</li><li>Свяжите его с Block через <code>newBlockEntity(...)</code>.</li><li>Напишите <code>tick(...)</code> для серверной обработки.</li><li>Добавьте сохранение данных и capability <code>IItemHandler</code>, если нужен инвентарь.</li><li>Если нужен GUI: создайте Menu → зарегистрируйте Menu → создайте Screen → зарегистрируйте Screen.</li></ol></div><div class="card"><h3>👾 Entity / моб</h3><ol><li>Создайте <code>entity/...</code> класс сущности.</li><li>Зарегистрируйте <code>EntityType</code> в <code>registry/ModEntities.java</code>.</li><li>Для моба добавьте attributes, AI и при необходимости spawn rules.</li><li>Напишите <code>tick()</code> или другие методы только для собственной логики.</li><li>В <code>client/</code> создайте/зарегистрируйте renderer и model.</li><li>Проверьте через <code>/summon modid:name</code>, затем отдельно проверяйте AI и внешний вид.</li></ol></div><div class="card"><h3>🖥️ GUI</h3><ol><li>Определите, какие данные нужны серверу.</li><li>Создайте <code>Menu</code> и добавьте слоты/data slots.</li><li>Зарегистрируйте Menu в <code>registry/ModMenus.java</code>.</li><li>Создайте <code>Screen</code> и напишите <code>renderBg(...)</code> / обработчики ввода.</li><li>Зарегистрируйте Screen в клиентском событии.</li><li>Для сложных действий добавьте network payload и проверку на сервере.</li></ol></div><div class="card"><h3>✨ Particle</h3><ol><li>Зарегистрируйте <code>ParticleType</code>.</li><li>Добавьте описание/ресурсы частицы.</li><li>В client-коде зарегистрируйте provider.</li><li>Создайте собственный Particle-класс только если sprite particle недостаточно.</li><li>Вызовите частицу из серверной/клиентской логики в зависимости от задачи.</li><li>Проверьте atlas, texture и provider, если частица невидима.</li></ol></div><div class="card"><h3>📡 Network payload</h3><ol><li>Создайте <code>network/payload/MyPayload.java</code>.</li><li>Опишите поля и <code>StreamCodec</code>.</li><li>Зарегистрируйте payload в <code>network/ModNetworking.java</code>.</li><li>Напишите handler как отдельный метод.</li><li>На сервере валидируйте игрока, позицию, расстояние и входные данные.</li><li>Проверяйте отдельно client → server и server → client.</li></ol></div><div class="card"><h3>📌 Event</h3><ol><li>Выберите нужный event и правильную event bus.</li><li>Создайте <code>event/ModEvents.java</code>.</li><li>Напишите метод с <code>@SubscribeEvent</code>.</li><li>Зарегистрируйте класс/метод там, где этого требует выбранный bus.</li><li>Внутри метода отделите client/server логику.</li><li>Если событие не срабатывает, первым делом проверьте bus и регистрацию.</li></ol></div></div><div class="callout ok"><b>Универсальная схема:</b> <code>1. Файл класса → 2. Регистрация → 3. Собственный метод → 4. Связи с другими системами → 5. JSON/текстуры → 6. Тест в клиенте и dedicated server</code>. Не каждый объект требует всех шести шагов.</div></section>
+<section id="workflow"><h2>2.2. Пошаговые цепочки: что делать по порядку</h2><p>Если не знаете, с чего начать объект, идите по цепочке сверху вниз. На каждом шаге сначала добейтесь минимально рабочего результата, а затем переходите к следующему.</p><div class="grid"><div class="card"><h3>🧱 Item</h3><ol><li>Создайте <code>item/RubyItem.java</code>, только если нужно собственное поведение.</li><li>Зарегистрируйте имя в <code>registry/ModItems.java</code>.</li><li>Напишите <code>use(...)</code>, <code>hurtEnemy(...)</code> или другой нужный метод.</li><li>Добавьте <code>assets/modid/models/item/ruby.json</code> и текстуру.</li><li>Добавьте перевод в <code>assets/modid/lang/</code>.</li><li>Запустите клиент и проверьте registry → модель → текстуру → поведение.</li></ol></div><div class="card"><h3>🧱 Block</h3><ol><li>Создайте блок в <code>block/</code>, если нужна своя логика.</li><li>Зарегистрируйте Block в <code>registry/ModBlocks.java</code>.</li><li>Зарегистрируйте BlockItem в <code>registry/ModItems.java</code>.</li><li>Для состояния используйте BlockState; для данных — переходите к BlockEntity.</li><li>Добавьте blockstate/model/texture и перевод.</li><li>Проверьте размещение, ломание, модель и drops.</li></ol></div><div class="card"><h3>⚙️ BlockEntity / машина</h3><ol><li>Создайте <code>block/entity/MachineBlockEntity.java</code>.</li><li>Зарегистрируйте <code>BlockEntityType</code> в <code>registry/ModBlockEntities.java</code>.</li><li>Свяжите его с Block через <code>newBlockEntity(...)</code>.</li><li>Напишите <code>tick(...)</code> для серверной обработки.</li><li>Добавьте сохранение данных и capability <code>IItemHandler</code>, если нужен инвентарь.</li><li>Если нужен GUI: создайте Menu → зарегистрируйте Menu → создайте Screen → зарегистрируйте Screen.</li></ol></div><div class="card"><h3>👾 Entity / моб</h3><ol><li>Создайте <code>entity/...</code> класс сущности.</li><li>Зарегистрируйте <code>EntityType</code> в <code>registry/ModEntities.java</code>.</li><li>Для моба добавьте attributes, AI и при необходимости spawn rules.</li><li>Напишите <code>tick()</code> или другие методы только для собственной логики.</li><li>В <code>client/</code> создайте/зарегистрируйте renderer и model.</li><li>Проверьте через <code>/summon modid:name</code>, затем отдельно проверяйте AI и внешний вид.</li></ol></div><div class="card"><h3>🖥️ GUI</h3><ol><li>Определите, какие данные нужны серверу.</li><li>Создайте <code>Menu</code> и добавьте слоты/data slots.</li><li>Зарегистрируйте Menu в <code>registry/ModMenus.java</code>.</li><li>Создайте <code>Screen</code> и напишите <code>renderBg(...)</code> / обработчики ввода.</li><li>Зарегистрируйте Screen в клиентском событии.</li><li>Для сложных действий добавьте network payload и проверку на сервере.</li></ol></div><div class="card"><h3>✨ Particle</h3><ol><li>Зарегистрируйте <code>ParticleType</code>.</li><li>Добавьте описание/ресурсы частицы.</li><li>В client-коде зарегистрируйте provider.</li><li>Создайте собственный Particle-класс только если sprite particle недостаточно.</li><li>Вызовите частицу из серверной/клиентской логики в зависимости от задачи.</li><li>Проверьте atlas, texture и provider, если частица невидима.</li></ol></div><div class="card"><h3>📡 Network payload</h3><ol><li>Создайте <code>network/payload/MyPayload.java</code>.</li><li>Опишите поля и <code>StreamCodec</code>.</li><li>Зарегистрируйте payload в <code>network/ModNetworking.java</code>.</li><li>Напишите handler как отдельный метод.</li><li>На сервере валидируйте игрока, позицию, расстояние и входные данные.</li><li>Проверяйте отдельно client → server и server → client.</li></ol></div><div class="card"><h3>📌 Event</h3><ol><li>Выберите нужный event и правильную event bus.</li><li>Создайте <code>event/ModEvents.java</code>.</li><li>Напишите метод с <code>&#64;SubscribeEvent</code>.</li><li>Зарегистрируйте класс/метод там, где этого требует выбранный bus.</li><li>Внутри метода отделите client/server логику.</li><li>Если событие не срабатывает, первым делом проверьте bus и регистрацию.</li></ol></div></div><div class="callout ok"><b>Универсальная схема:</b> <code>1. Файл класса → 2. Регистрация → 3. Собственный метод → 4. Связи с другими системами → 5. JSON/текстуры → 6. Тест в клиенте и dedicated server</code>. Не каждый объект требует всех шести шагов.</div></section>
 <section id="class-skeletons"><h2>2.3. Минимальные скелеты классов</h2><p>Ниже не «магические» готовые системы, а короткие каркасы, от которых удобно начинать реальный класс. Имена пакетов и регистрации показаны намеренно явно.</p><div class="grid"><div class="card"><h3>Обычный Item</h3><pre><button class="copy">Copy</button>public class RubyItem extends Item {
     public RubyItem(Properties properties) {
         super(properties);
     }
 
-    @Override
+    &#64;Override
     public InteractionResult use(Level level, Player player,
                                  InteractionHand hand) {
         // gameplay logic
@@ -59,7 +59,7 @@ src/main/resources/
         // server tick
     }
 }</pre></div><div class="card"><h3>Событие</h3><pre><button class="copy">Copy</button>public final class ModEvents {
-    @SubscribeEvent
+    &#64;SubscribeEvent
     public static void onJoin(PlayerEvent.PlayerLoggedInEvent event) {
         Player player = event.getEntity();
         // reaction to event
@@ -71,7 +71,7 @@ src/main/resources/
         super(menu, inv, title);
     }
 
-    @Override
+    &#64;Override
     protected void renderBg(GuiGraphics g, float partialTick,
                             int mouseX, int mouseY) {
         // draw background
@@ -96,7 +96,7 @@ src/main/resources/
 );</pre><h3>Собственное поведение</h3><pre><button class="copy">Copy</button>public class MagicWand extends Item {
     public MagicWand(Properties properties) { super(properties); }
 
-    @Override
+    &#64;Override
     public InteractionResult use(Level level, Player player, InteractionHand hand) {
         if (!level.isClientSide) {
             player.sendSystemMessage(Component.literal("Волшебная палочка!"));
@@ -137,11 +137,11 @@ public static void register(IEventBus bus) {
         super(type, level);
     }
 
-    @Override protected void defineSynchedData(SynchedEntityData.Builder b) {}
-    @Override protected void readAdditionalSaveData(CompoundTag tag) {}
-    @Override protected void addAdditionalSaveData(CompoundTag tag) {}
+    &#64;Override protected void defineSynchedData(SynchedEntityData.Builder b) {}
+    &#64;Override protected void readAdditionalSaveData(CompoundTag tag) {}
+    &#64;Override protected void addAdditionalSaveData(CompoundTag tag) {}
 
-    @Override public void tick() {
+    &#64;Override public void tick() {
         super.tick();
         if (!level().isClientSide) {
             // server-side movement / collision / effects
@@ -160,7 +160,7 @@ public static final Supplier<SimpleParticleType> SPARK =
         // addDataSlot(...);
     }
 
-    @Override public boolean stillValid(Player player) {
+    &#64;Override public boolean stillValid(Player player) {
         return true;
     }
 }
@@ -170,7 +170,7 @@ public class MachineScreen extends AbstractContainerScreen<MachineMenu> {
         super(menu, inv, title);
     }
 
-    @Override protected void renderBg(GuiGraphics g, float partialTick,
+    &#64;Override protected void renderBg(GuiGraphics g, float partialTick,
                                      int mouseX, int mouseY) {
         // g.blit(...)
     }
@@ -184,15 +184,15 @@ public class MachineScreen extends AbstractContainerScreen<MachineMenu> {
         return simpleCodec(MachineBlock::new);
     }
 
-    @Override protected MapCodec<? extends BaseEntityBlock> codec() {
+    &#64;Override protected MapCodec<? extends BaseEntityBlock> codec() {
         return codec();
     }
 
-    @Override public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
+    &#64;Override public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
         return new MachineBlockEntity(pos, state);
     }
 
-    @Override public InteractionResult useWithoutItem(BlockState state, Level level,
+    &#64;Override public InteractionResult useWithoutItem(BlockState state, Level level,
             BlockPos pos, Player player, BlockHitResult hit) {
         if (!level.isClientSide && player instanceof ServerPlayer serverPlayer
                 && level.getBlockEntity(pos) instanceof MachineBlockEntity be) {
@@ -202,7 +202,7 @@ public class MachineScreen extends AbstractContainerScreen<MachineMenu> {
     }
 }</pre><p>В конкретном MDK проверьте сигнатуру открытия меню и импорты: версии NeoForge могут менять детали API.</p><h3>2) BlockEntity: инвентарь и обработка</h3><pre><button class="copy">Copy</button>public class MachineBlockEntity extends BlockEntity implements MenuProvider {
     private final ItemStackHandler inventory = new ItemStackHandler(2) {
-        @Override protected void onContentsChanged(int slot) {
+        &#64;Override protected void onContentsChanged(int slot) {
             setChanged();
         }
     };
@@ -227,11 +227,11 @@ public class MachineScreen extends AbstractContainerScreen<MachineMenu> {
         }
     }
 
-    @Override public Component getDisplayName() {
+    &#64;Override public Component getDisplayName() {
         return Component.literal("Machine");
     }
 
-    @Override public AbstractContainerMenu createMenu(int id, Inventory inv, Player player) {
+    &#64;Override public AbstractContainerMenu createMenu(int id, Inventory inv, Player player) {
         return new MachineMenu(id, inv, this);
     }
 
@@ -255,13 +255,13 @@ public class MachineScreen extends AbstractContainerScreen<MachineMenu> {
             addSlot(new Slot(inv, col, 8 + col * 18, 142));
     }
 
-    @Override public boolean stillValid(Player player) {
+    &#64;Override public boolean stillValid(Player player) {
         return stillValid(ContainerLevelAccess.create(
                 machine.getLevel(), machine.getBlockPos()), player,
                 ModBlocks.MACHINE.get());
     }
 
-    @Override public ItemStack quickMoveStack(Player player, int index) {
+    &#64;Override public ItemStack quickMoveStack(Player player, int index) {
         return ItemStack.EMPTY; // учебный пример: shift-click добавляется отдельно
     }
 }</pre><h3>4) Screen</h3><pre><button class="copy">Copy</button>public class MachineScreen extends AbstractContainerScreen<MachineMenu> {
@@ -271,7 +271,7 @@ public class MachineScreen extends AbstractContainerScreen<MachineMenu> {
         this.imageHeight = 166;
     }
 
-    @Override protected void renderBg(GuiGraphics g, float partialTick,
+    &#64;Override protected void renderBg(GuiGraphics g, float partialTick,
                                      int mouseX, int mouseY) {
         // В production здесь обычно g.blit() с texture GUI.
         g.fill(leftPos, topPos, leftPos + imageWidth,
@@ -280,7 +280,7 @@ public class MachineScreen extends AbstractContainerScreen<MachineMenu> {
         g.drawString(font, "Progress: " + menu.getProgress(),
                 leftPos + 8, topPos + 20, 0xFFFFFF);
     }
-}</pre><h3>5) Регистрация Screen</h3><pre><button class="copy">Copy</button>@SubscribeEvent
+}</pre><h3>5) Регистрация Screen</h3><pre><button class="copy">Copy</button>&#64;SubscribeEvent
 public static void registerScreens(RegisterMenuScreensEvent event) {
     event.register(ModMenus.MACHINE.get(), MachineScreen::new);
 }</pre><div class="callout ok"><b>Итоговая цепочка:</b> Block → BlockEntity → Menu → Screen. В реальной машине добавьте сохранение инвентаря, capability <code>IItemHandler</code>, проверку рецепта/выходного слота, синхронизацию прогресса и корректный <code>quickMoveStack</code>.</div></section>
@@ -289,7 +289,7 @@ public static void registerScreens(RegisterMenuScreensEvent event) {
         super(type, level);
     }
 
-    @Override protected void registerGoals() {
+    &#64;Override protected void registerGoals() {
         goalSelector.addGoal(0, new FloatGoal(this));
         goalSelector.addGoal(2, new RandomStrollGoal(this, 1.0));
         goalSelector.addGoal(3, new LookAtPlayerGoal(this, Player.class, 8.0f));
@@ -304,7 +304,7 @@ public static final Supplier<EntityType<RubyCreature>> RUBY_CREATURE =
             .sized(0.8f, 1.2f)
             .build(ResourceLocation.fromNamespaceAndPath(MOD_ID, "ruby_creature").toString()));
 
-@SubscribeEvent
+&#64;SubscribeEvent
 public static void registerAttributes(EntityAttributeCreationEvent event) {
     event.put(RUBY_CREATURE.get(),
         RubyCreature.createMobAttributes()
@@ -312,7 +312,7 @@ public static void registerAttributes(EntityAttributeCreationEvent event) {
             .add(Attributes.MOVEMENT_SPEED, 0.25)
             .add(Attributes.ATTACK_DAMAGE, 3.0)
             .build());
-}</pre><h3>3) Клиентский renderer</h3><pre><button class="copy">Copy</button>@SubscribeEvent
+}</pre><h3>3) Клиентский renderer</h3><pre><button class="copy">Copy</button>&#64;SubscribeEvent
 public static void registerEntityRenderers(EntityRenderersEvent.RegisterRenderers event) {
     event.registerEntityRenderer(ModEntities.RUBY_CREATURE.get(),
         MobRenderer::new); // замените на renderer/model из вашего MDK
@@ -348,7 +348,7 @@ public record ExampleEntityRenderer(
         this.layerLocation = new ExampleModelLayerLocation("example_mod", "entity");
     }
 
-    @Override
+    &#64;Override
     protected void render(
         Entity entity,
         float delta,
@@ -378,8 +378,8 @@ public record ExampleEntityRenderer(
         
         modelRenderer.render(particleRenderer, matrixStack, packedLight, packedOverlay);
     }
-}</pre><h3>Client-only Classes</h3><p>Используйте <code>@ModClientEvent</code> для регистрации client-only классов.</p><pre><button class="copy">Copy</button>// src/main/java/com/example/mod/client/ExampleClientMod.java
-@Mod.EventBusSubscriber(modid = "example_mod", bus = ModEventBus.class)
+}</pre><h3>Client-only Classes</h3><p>Используйте <code>&#64;ModClientEvent</code> для регистрации client-only классов.</p><pre><button class="copy">Copy</button>// src/main/java/com/example/mod/client/ExampleClientMod.java
+&#64;Mod.EventBusSubscriber(modid = "example_mod", bus = ModEventBus.class)
 public final class ExampleClientMod {
     public static void init(IEventBus modBus) {
         // Регистрация client-only классов
@@ -391,7 +391,7 @@ public final class ExampleClientMod {
         event.register(...);
     }
 }</pre><h3>Key Mappings</h3><p>Регистрация кастомных клавиш.</p><pre><button class="copy">Copy</button>// src/main/java/com/example/mod/client/ExampleKeyMappings.java
-@SubscribeEvent
+&#64;SubscribeEvent
 public static void registerKeyMappings(ClientKeyMappingRegistrationEvent event) {
     KeyMapping keyMapping = new KeyMapping(
         "example_mod.example_key",
@@ -401,16 +401,16 @@ public static void registerKeyMappings(ClientKeyMappingRegistrationEvent event) 
     
     event.register(keyMapping);
 }</pre><h3>Client Events</h3><p>Клиентские события для client-only логики.</p><pre><button class="copy">Copy</button>// src/main/java/com/example/mod/client/ExampleClientEvents.java
-@Mod.EventBusSubscriber(modid = "example_mod", bus = ModEventBus.class)
+&#64;Mod.EventBusSubscriber(modid = "example_mod", bus = ModEventBus.class)
 public final class ExampleClientEvents {
-    @SubscribeEvent
+    &#64;SubscribeEvent
     public static void onClientTick(ClientTickEvent event) {
         // Клиентская логика при каждом тике
     }
 }</pre></section>
 <section id="sound-events"><h2>9.3. Звуки</h2><div class="callout ok"><b>Что можно делать:</b>
 <ul><li>Регистрация звуков через <code>RegisterSoundsEvent</code></li><li>Создание sound events для событий игры</li><li>Использование sound event bus</li></ul></div><h3>Регистрация звуков</h3><pre><button class="copy">Copy</button>// src/main/java/com/example/mod/sound/ModSounds.java
-@SubscribeEvent
+&#64;SubscribeEvent
 public static void registerSounds(RegisterSoundsEvent event) {
     // Звук для открытия меню
     event.register(
@@ -432,7 +432,7 @@ public static void registerSounds(RegisterSoundsEvent event) {
         )
     );
 }</pre><h3>Sound Events</h3><p>Sound events позволяют привязать звук к событию игры.</p><pre><button class="copy">Copy</button>// src/main/java/com/example/mod/sound/ModSounds.java
-@SubscribeEvent
+&#64;SubscribeEvent
 public static void registerSoundEvents(RegisterSoundEvents event) {
     // Звук при входе игрока
     event.register(
@@ -454,7 +454,7 @@ public static void registerSoundEvents(RegisterSoundEvents event) {
         )
     );
 }</pre><h3>Sound Event Bus</h3><p>Sound event bus позволяет слушать и отправлять sound events.</p><pre><button class="copy">Copy</button>// src/main/java/com/example/mod/sound/ModSounds.java
-@SubscribeEvent
+&#64;SubscribeEvent
 public static void onPlayerJoin(PlayerEvent.PlayerLoggedInEvent event) {
     Player player = event.getEntity();
     
@@ -488,7 +488,7 @@ SoundData soundData = SoundData.createCustomSoundData(
     1.0f,
     1.0f
 );</pre></section>
-<section id="events"><h2>10. События и «процедуры»</h2><div class="callout"><b>📍 Где создавать метод:</b> например, <code>event/ModEvents.java</code>. Метод с <code>@SubscribeEvent</code> создаёте вы, а NeoForge вызывает его при наступлении события. Для обычной процедуры без события метод можно написать в нужном gameplay-классе и вызвать напрямую.</div><p>Если под «процедурами» имеются в виду MCreator-подобные процедуры, в чистом NeoForge отдельной системы с таким названием нет. Аналог — обычные Java-методы, вызываемые из событий, tick-методов, callbacks, команд и network handlers.</p><table><tr><th>Задача</th><th>Типичный механизм</th></tr><tr><td>Регистрация объектов</td><td>Mod Event Bus + DeferredRegister</td></tr><tr><td>Реакция на игровой момент</td><td>Game Event Bus / <code>@SubscribeEvent</code></td></tr><tr><td>Клиентская настройка</td><td>Client events / client mod bus</td></tr><tr><td>Периодическая логика</td><td>ServerTickEvent / LevelTickEvent / BlockEntity ticker</td></tr><tr><td>Ввод игрока</td><td>Key Mapping + client input event</td></tr><tr><td>Изменение мира</td><td>Server-side event или прямой API Minecraft</td></tr><tr><td>Связь client↔server</td><td>Custom Packet Payload</td></tr></table><pre><button class="copy">Copy</button>@SubscribeEvent
+<section id="events"><h2>10. События и «процедуры»</h2><div class="callout"><b>📍 Где создавать метод:</b> например, <code>event/ModEvents.java</code>. Метод с <code>&#64;SubscribeEvent</code> создаёте вы, а NeoForge вызывает его при наступлении события. Для обычной процедуры без события метод можно написать в нужном gameplay-классе и вызвать напрямую.</div><p>Если под «процедурами» имеются в виду MCreator-подобные процедуры, в чистом NeoForge отдельной системы с таким названием нет. Аналог — обычные Java-методы, вызываемые из событий, tick-методов, callbacks, команд и network handlers.</p><table><tr><th>Задача</th><th>Типичный механизм</th></tr><tr><td>Регистрация объектов</td><td>Mod Event Bus + DeferredRegister</td></tr><tr><td>Реакция на игровой момент</td><td>Game Event Bus / <code>&#64;SubscribeEvent</code></td></tr><tr><td>Клиентская настройка</td><td>Client events / client mod bus</td></tr><tr><td>Периодическая логика</td><td>ServerTickEvent / LevelTickEvent / BlockEntity ticker</td></tr><tr><td>Ввод игрока</td><td>Key Mapping + client input event</td></tr><tr><td>Изменение мира</td><td>Server-side event или прямой API Minecraft</td></tr><tr><td>Связь client↔server</td><td>Custom Packet Payload</td></tr></table><pre><button class="copy">Copy</button>&#64;SubscribeEvent
 public static void onPlayerJoin(PlayerEvent.PlayerLoggedInEvent event) {
     Player player = event.getEntity();
     player.sendSystemMessage(Component.literal("Добро пожаловать!"));
@@ -504,7 +504,7 @@ public static void onPlayerJoin(PlayerEvent.PlayerLoggedInEvent event) {
             OpenMachinePayload::new
         );
 
-    @Override public Type<? extends CustomPacketPayload> type() { return TYPE; }
+    &#64;Override public Type<? extends CustomPacketPayload> type() { return TYPE; }
 }</pre><p>Никогда не доверяйте данным от клиента: packet handler должен проверять игрока, позицию, расстояние, состояние мира и права.</p><p><a class="ext" href="https://docs.neoforged.net/docs/1.21.1/networking/">Networking ↗</a></p></section>
 <section id="data"><h2>12. Данные и attachments</h2><p>Data Attachments позволяют прикреплять дополнительные данные к поддерживаемым holder-объектам, включая entities, chunks и block entities. Для ItemStack в 1.21.1 следует использовать vanilla Data Components.</p><pre><button class="copy">Copy</button>public static final DeferredRegister<AttachmentType<?>> ATTACHMENTS =
     DeferredRegister.create(NeoForgeRegistries.ATTACHMENT_TYPES, MOD_ID);
@@ -515,7 +515,7 @@ public static final Supplier<AttachmentType<Integer>> MANA =
 
 // player.getData(MANA)
 // player.setData(MANA, player.getData(MANA) + 10)</pre><p>Если данные должны синхронизироваться клиенту, attachment сам по себе не заменяет network sync: отправляйте необходимые данные клиенту.</p><p><a class="ext" href="https://docs.neoforged.net/docs/1.21.1/datastorage/attachments/">Data Attachments ↗</a></p></section>
-<section id="cap"><h2>13. Capabilities</h2><p>Capability — контракт «что объект умеет», отделённый от конкретной реализации. Типичные примеры: item handler, energy/resource handlers. В 1.21.1 providers регистрируются через <code>RegisterCapabilitiesEvent</code>.</p><pre><button class="copy">Copy</button>@SubscribeEvent
+<section id="cap"><h2>13. Capabilities</h2><p>Capability — контракт «что объект умеет», отделённый от конкретной реализации. Типичные примеры: item handler, energy/resource handlers. В 1.21.1 providers регистрируются через <code>RegisterCapabilitiesEvent</code>.</p><pre><button class="copy">Copy</button>&#64;SubscribeEvent
 public static void registerCapabilities(RegisterCapabilitiesEvent event) {
     event.registerBlockEntity(
         Capabilities.ItemHandler.BLOCK,
@@ -523,7 +523,7 @@ public static void registerCapabilities(RegisterCapabilitiesEvent event) {
         (be, side) -> be.getItemHandler(side)
     );
 }</pre><p>Если capability provider меняет возвращаемый объект/состояние и ранее выданные значения кэшировались, нужно корректно инвалидировать capability cache.</p><p><a class="ext" href="https://docs.neoforged.net/docs/1.21.1/inventories/capabilities/">Capabilities ↗</a></p></section>
-<section id="commands"><h2>14. Команды</h2><p>Команды регистрируются через событие команд. Brigadier отвечает за parsing, suggestions, permissions и execution.</p><pre><button class="copy">Copy</button>@SubscribeEvent
+<section id="commands"><h2>14. Команды</h2><p>Команды регистрируются через событие команд. Brigadier отвечает за parsing, suggestions, permissions и execution.</p><pre><button class="copy">Copy</button>&#64;SubscribeEvent
 public static void registerCommands(RegisterCommandsEvent event) {
     event.getDispatcher().register(
         Commands.literal("example")
@@ -580,12 +580,12 @@ Commands.literal("set")
 }</pre></section>
 <section id="debug"><h2>19. Debug & тестирование</h2><ol><li>Запустите <code>runClient</code> и проверяйте логи.</li><li>Проверьте registry names и namespace.</li><li>Проверьте assets/data пути.</li><li>Проверьте client/server side.</li><li>Проверьте dedicated server.</li><li>При networking проверяйте оба направления и валидируйте input.</li><li>Используйте IDE для перехода в исходники Minecraft/NeoForge.</li></ol><div class="callout"><b>Типовые симптомы:</b> предмет есть в registry, но розовый — проблема resource/model/texture; GUI открывается только локально — забыта server/client синхронизация; dedicated server падает — client-only class загружен на сервере; capability не работает после замены handler — нужна инвалидизация.</div></section>
 <section id="patterns"><h2>20. Рецепты архитектуры</h2><table><tr><th>Хочу сделать</th><th>С чего начать</th></tr><tr><td>Меч/инструмент</td><td>Item + свойства + custom class при необходимости</td></tr><tr><td>Машина с инвентарём</td><td>Block + BlockEntity + IItemHandler capability + Menu + Screen</td></tr><tr><td>Энергия</td><td>BlockEntity + соответствующий resource capability + sync</td></tr><tr><td>Моб</td><td>Entity + EntityType + attributes/AI + renderer + spawn rules</td></tr><tr><td>Снаряд</td><td>Entity + EntityType + movement/collision + renderer</td></tr><tr><td>Особый визуальный эффект</td><td>ParticleType + provider + texture/particle class</td></tr><tr><td>Кнопка/клавиша</td><td>Client key mapping + input event + packet на сервер</td></tr><tr><td>Состояние игрока</td><td>Attachment + serialization + server/client sync</td></tr><tr><td>Изменение vanilla объекта</td><td>Event / tag / datapack-style resource / mixin только если API недостаточен</td></tr><tr><td>Сложный экран</td><td>Menu + Screen + slots/data slots + custom payload при сложной синхронизации</td></tr></table></section>
-<section id="mixin"><h2>21. Модификации vanilla через Mixin</h2><div class="callout warn"><b>Важно:</b> Mixin — это инструмент для расширения классов, а не замены их поведения. Неправильное использование может привести к конфликтам и непредсказуемым результатам.</div><p>Mixin позволяет добавлять методы в существующие классы Minecraft/NeoForge без наследования. Это полезно для расширения функциональности с минимальным вмешательством в оригинальный код.</p><h3>Как использовать Mixin</h3><ol><li>Создайте файл <code>src/main/java/com/example/mod/mixin/ExampleMixin.java</code></li><li>Укажите класс-мишень и метод для расширения</li><li>Реализуйте методы, которые будут вызываться в точке расширения</li><li>Регистрируйте Mixin через <code>MixinTransformerConfig</code></li></ol><h3>Пример Mixin</h3><pre><button class="copy">Copy</button>@Mixin(Block.class)
-@RequiredArgsConstructor
+<section id="mixin"><h2>21. Модификации vanilla через Mixin</h2><div class="callout warn"><b>Важно:</b> Mixin — это инструмент для расширения классов, а не замены их поведения. Неправильное использование может привести к конфликтам и непредсказуемым результатам.</div><p>Mixin позволяет добавлять методы в существующие классы Minecraft/NeoForge без наследования. Это полезно для расширения функциональности с минимальным вмешательством в оригинальный код.</p><h3>Как использовать Mixin</h3><ol><li>Создайте файл <code>src/main/java/com/example/mod/mixin/ExampleMixin.java</code></li><li>Укажите класс-мишень и метод для расширения</li><li>Реализуйте методы, которые будут вызываться в точке расширения</li><li>Регистрируйте Mixin через <code>MixinTransformerConfig</code></li></ol><h3>Пример Mixin</h3><pre><button class="copy">Copy</button>&#64;Mixin(Block.class)
+&#64;RequiredArgsConstructor
 public class ExampleBlockMixin {
     private final Block block;
 
-    @Inject(at = @At("TAIL"), remap = false)
+    &#64;Inject(at = &#64;At("TAIL"), remap = false)
     public void onBlockPlaced(BlockPlacementEvent event) {
         // Расширяем логику при размещении блока
         if (event.getState().hasProperty("custom", Boolean.class)) {
@@ -616,12 +616,12 @@ public class ExampleBlockMixin {
     }
 ]</pre><h3>Когда использовать Mixin</h3><div class="grid"><div class="card"><b>Использовать Mixin:</b>
 <ul><li>Расширение существующего API без наследования</li><li>Минимальное вмешательство в оригинальный код</li><li>Адаптация к изменениям в Minecraft/NeoForge</li></ul></div><div class="card"><b>Не использовать Mixin:</b>
-<ul><li>Замена основного поведения (лучше наследование)</li><li>Сложная логика с состоянием (лучше собственный класс)</li><li>Когда нужно полное переопределение метода</li></ul></div></div><h3>Пример: расширение BlockItem</h3><pre><button class="copy">Copy</button>@Mixin(BlockItem.class)
-@RequiredArgsConstructor
+<ul><li>Замена основного поведения (лучше наследование)</li><li>Сложная логика с состоянием (лучше собственный класс)</li><li>Когда нужно полное переопределение метода</li></ul></div></div><h3>Пример: расширение BlockItem</h3><pre><button class="copy">Copy</button>&#64;Mixin(BlockItem.class)
+&#64;RequiredArgsConstructor
 public class ExampleBlockItemMixin {
     private final BlockItem blockItem;
 
-    @Inject(at = "@RETURN", remap = false)
+    &#64;Inject(at = "&#64;RETURN", remap = false)
     public void onRightClick(BlockHitResult hit) {
         // Расширяем логику при правом клике
         if (hit.getBlockState().hasProperty("custom_action")) {
@@ -629,7 +629,7 @@ public class ExampleBlockItemMixin {
         }
     }
 }</pre><h3>Безопасность Mixin</h3><div class="callout warn"><b>Правила безопасности:</b>
-<ul><li>Используйте <code>@At("TAIL")</code> для расширения после основного кода</li><li>Избегайте конфликтов с существующими @Inject методами</li><li>Проверяйте версии Minecraft/NeoForge при регистрации</li><li>Не используйте Mixin для критических систем (спавн, AI)</li></ul></div><p>Для получения актуальной информации о Mixin API и конфигурации смотрите официальную документацию NeoForge.</p></section>
+<ul><li>Используйте <code>&#64;At("TAIL")</code> для расширения после основного кода</li><li>Избегайте конфликтов с существующими &#64;Inject методами</li><li>Проверяйте версии Minecraft/NeoForge при регистрации</li><li>Не используйте Mixin для критических систем (спавн, AI)</li></ul></div><p>Для получения актуальной информации о Mixin API и конфигурации смотрите официальную документацию NeoForge.</p></section>
 <section id="data-components"><h2>21.2. Data Components & Component API</h2><p>Data Components — это современный подход к хранению данных в Minecraft, который заменяет/дополняет Attachments для ItemStack и других holder-объектов.</p><div class="callout ok"><b>Преимущества:</b>
 <ul><li>Типизированные данные через <code>Component</code></li><li>Удобная сериализация через JSON/CompoundTag</li><li>Более гибкая работа с данными</li></ul></div><h3>Основные типы Component</h3><pre><button class="copy">Copy</button>// Для ItemStack
 ItemStack stack = new ItemStack(ModItems.RUBY.get());
@@ -666,12 +666,12 @@ public class MachineBlockEntity extends BlockEntity {
         super(ModBlockEntities.MACHINE.get(), pos, state);
     }
 
-    @Override protected void readAdditionalSaveData(CompoundTag tag) {
+    &#64;Override protected void readAdditionalSaveData(CompoundTag tag) {
         super.readAdditionalSaveData(tag);
         progress = tag.getInt("progress");
     }
 
-    @Override protected void addAdditionalSaveData(CompoundTag tag) {
+    &#64;Override protected void addAdditionalSaveData(CompoundTag tag) {
         super.addAdditionalSaveData(tag);
         tag.putInt("progress", progress);
     }
@@ -723,7 +723,7 @@ public record ExampleModifier(
             "example_modifier",
             new BiomeModifierSettings.Builder()
                 .addFeature(new FeatureConfigurator() {
-                    @Override
+                    &#64;Override
                     public void configure(FeatureConfigurationBuilder builder) {
                         builder.setPlacedState(BlockStates.STONE);
                     }
@@ -841,7 +841,7 @@ register(...)
 if (!level.isClientSide) { ... }
 
 // Event
-@SubscribeEvent
+&#64;SubscribeEvent
 static void onEvent(SomeEvent event) { ... }
 
 // ItemStack
@@ -865,7 +865,7 @@ player.setData(ModAttachments.MANA, 100);</pre><h3>Официальные ист
 </main></div></div>
 <script>
 function esc(s){return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;')}
-function highlightJava(s){let x=esc(s);const stash=[];const hold=v=>{const i=stash.push(v)-1;return `§§§${String.fromCharCode(65+i)}§§§`};x=x.replace(/\/\/.*$/gm,m=>hold(`<span class="tok-comment">${m}</span>`));x=x.replace(/("(?:\\.|[^"\\])*"|'(?:\\.|[^'\\])*')/g,m=>hold(`<span class="tok-string">${m}</span>`));x=x.replace(/(@[A-Za-z_$][\w$]*)/g,'<span class="tok-anno">$1</span>');x=x.replace(/\b(public|private|protected|static|final|class|interface|extends|implements|new|return|if|else|for|while|void|this|super|true|false|null|package|import|override)\b/g,'<span class="tok-key">$1</span>');x=x.replace(/\b(int|long|float|double|boolean|byte|short|char|var|void|String|Item|Block|Player|Level|BlockPos|BlockState|Component|Inventory|GuiGraphics|AbstractContainerScreen|AbstractContainerMenu|InteractionResult|InteractionHand)\b/g,'<span class="tok-type">$1</span>');x=x.replace(/\b\d+(?:\.\d+)?[fFdDlL]?\b/g,'<span class="tok-number">$&</span>');x=x.replace(/\b([A-Za-z_$][\w$]*)\s*(?=\()/g,'<span class="tok-method">$1</span>');return x.replace(/§§§([A-Z])§§§/g,(_,i)=>stash[i.charCodeAt(0)-65])}
+function highlightJava(s){let x=esc(s);const stash=[];const hold=v=>{const i=stash.push(v)-1;return `§§§${String.fromCharCode(65+i)}§§§`};x=x.replace(/\/\/.*$/gm,m=>hold(`<span class="tok-comment">${m}</span>`));x=x.replace(/("(?:\\.|[^"\\])*"|'(?:\\.|[^'\\])*')/g,m=>hold(`<span class="tok-string">${m}</span>`));x=x.replace(/(&#64;[A-Za-z_$][\w$]*)/g,'<span class="tok-anno">$1</span>');x=x.replace(/\b(public|private|protected|static|final|class|interface|extends|implements|new|return|if|else|for|while|void|this|super|true|false|null|package|import|override)\b/g,'<span class="tok-key">$1</span>');x=x.replace(/\b(int|long|float|double|boolean|byte|short|char|var|void|String|Item|Block|Player|Level|BlockPos|BlockState|Component|Inventory|GuiGraphics|AbstractContainerScreen|AbstractContainerMenu|InteractionResult|InteractionHand)\b/g,'<span class="tok-type">$1</span>');x=x.replace(/\b\d+(?:\.\d+)?[fFdDlL]?\b/g,'<span class="tok-number">$&</span>');x=x.replace(/\b([A-Za-z_$][\w$]*)\s*(?=\()/g,'<span class="tok-method">$1</span>');return x.replace(/§§§([A-Z])§§§/g,(_,i)=>stash[i.charCodeAt(0)-65])}
 function highlightJson(s){let x=esc(s);x=x.replace(/(&quot;[^&]*?&quot;)\s*:/g,'<span class="tok-json-key">$1</span>:');return x.replace(/(:\s*)(&quot;.*?&quot;)/g,'$1<span class="tok-json-value">$2</span>')}
 function copyText(text,done){const ok=()=>{done();};if(navigator.clipboard&&window.isSecureContext){navigator.clipboard.writeText(text).then(ok).catch(fallback)}else fallback();function fallback(){const ta=document.createElement('textarea');ta.value=text;ta.setAttribute('readonly','');ta.style.position='fixed';ta.style.opacity='0';document.body.appendChild(ta);ta.select();try{document.execCommand('copy');ok()}finally{ta.remove()}}}
 document.querySelectorAll('pre').forEach(p=>{let b=p.querySelector('.copy');if(!b)return;let raw=p.textContent.replace(/^Copy\s*/,'');p.innerHTML=b.outerHTML+((raw.trim().startsWith('{')||raw.trim().startsWith('['))?highlightJson(raw):highlightJava(raw));b=p.querySelector('.copy');b.onclick=()=>copyText(raw,()=>{b.textContent='Copied';setTimeout(()=>b.textContent='Copy',900)})});
