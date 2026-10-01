@@ -13,15 +13,17 @@ header{padding:42px 28px 28px;border-bottom:1px solid var(--line);background:lin
 </style>
 </head>
 <body><div class="app">
-<header><div class="wrap"><div class="eyebrow">NeoForge • Minecraft 1.21.1</div><h1>Modding Handbook</h1><p class="lead">Практическая «книга» по разработке модов: от первого рабочего проекта до блоков, предметов, BlockEntity, сущностей, частиц, GUI, networking, capabilities, attachments, событий, команд, data generation и типовых процедур.</p><div class="meta"><span class="pill">Java 21</span><span class="pill">NeoForge 1.21.1 baseline</span><span class="pill">Java + JSON + datagen</span><span class="pill">Ориентир: production-ready паттерны</span></div></div></header>
+<header><div class="wrap"><div class="eyebrow">NeoForge • Minecraft 1.21.1</div><h1>Modding Handbook</h1><p class="lead">Практическая «книга» по разработке модов: от первого рабочего проекта до блоков, предметов, BlockEntity, сущностей, частиц, GUI, networking, capabilities, attachments, событий, команд, data generation и типовых процедур.</p><div class="meta"><span class="pill">Java 21</span><span class="pill">NeoForge 1.21.1 baseline</span><span class="pill">Java + JSON + datagen</span><span class="pill">Проверка API: 1.21.1</span><span class="pill">v15 • код без HTML-подсветки</span></div></div></header>
 <div class="layout"><nav class="toc"><strong>Содержание</strong><input id="search" class="search" placeholder="Поиск по главе…"><div id="links">
-<a href="#start">1. Старт проекта</a><a href="#architecture">2. Архитектура мода</a><a href="#workflow">2.2. Пошаговые цепочки</a><a href="#class-skeletons">2.3. Скелеты классов</a><a href="#registries">3. Регистрация</a><a href="#items">4. Предметы</a><a href="#blocks">5. Блоки</a><a href="#be">6. BlockEntity</a><a href="#entities">7. Сущности</a><a href="#particles">8. Частицы</a><a href="#gui">9. Меню и GUI</a><a href="#machine-example">9.1. Машина с GUI</a><a href="#mob-example">9.2. Простой моб</a><a href="#sound-events">9.3. Звуки</a><a href="#events">10. События и «процедуры»</a><a href="#network">11. Networking</a><a href="#data">12. Данные и attachments</a><a href="#cap">13. Capabilities</a><a href="#commands">14. Команды</a><a href="#resources">15. JSON и ресурсы</a><a href="#datagen">16. Data Generation</a><a href="#recipes">17. Recipes / Loot / Tags</a><a href="#client">18. Клиентская часть</a><a href="#debug">19. Debug & тестирование</a><a href="#patterns">20. Рецепты архитектуры</a><a href="#mixin">21. Mixin модификация Vanilla</a><a href="#cheatsheet">22. Шпаргалка</a>
+<a href="#start">1. Старт проекта</a><a href="#architecture">2. Архитектура мода</a><a href="#workflow">2.2. Пошаговые цепочки</a><a href="#class-skeletons">2.3. Скелеты классов</a><a href="#registries">3. Регистрация</a><a href="#items">4. Предметы</a><a href="#item-details">4.1. Предметы: поведение и ItemStack</a><a href="#enchantments">4.2. Зачарования</a><a href="#blocks">5. Блоки</a><a href="#block-details">5.1. BlockState и взаимодействия</a><a href="#be">6. BlockEntity</a><a href="#entities">7. Сущности</a><a href="#entity-details">7.1. AI, projectile и синхронизация</a><a href="#particles">8. Частицы</a><a href="#sounds-details">8.1. Звуки</a><a href="#gui">9. Меню и GUI</a><a href="#screen-details">9.1. Screen: координаты, widgets и отрисовка</a><a href="#menu-details">9.2. Menu: слоты и синхронизация</a><a href="#machine-example">9.3. Машина с GUI</a><a href="#mob-example">9.4. Простой моб</a><a href="#events">10. События и «процедуры»</a><a href="#network">11. Networking</a><a href="#network-details">11.1. Client → Server, Server → Client и безопасность</a><a href="#data">12. Данные и attachments</a><a href="#cap">13. Capabilities</a><a href="#commands">14. Команды</a><a href="#resources">15. JSON и ресурсы</a><a href="#datagen">16. Data Generation</a><a href="#recipes">17. Recipes / Loot / Tags</a><a href="#data-resources">17.1. Enchantments, Data Maps и Conditions</a><a href="#client">18. Клиентская часть</a><a href="#client-rendering">18.1. Rendering</a><a href="#debug">19. Debug & тестирование</a><a href="#patterns">20. Рецепты архитектуры</a><a href="#recipes-cookbook">20.1. Практические рецепты</a><a href="#mixin">21. Mixin</a><a href="#components">21.2. Data Components</a><a href="#world-gen">21.3. World Generation</a><a href="#advanced">21.4. Дополнительные системы</a><a href="#cheatsheet">22. Шпаргалка</a>
 </div></nav>
 <main id="content">
+<div class="callout ok"><b>🛠 v15 — исправлено отображение кода:</b> Java-примеры выводятся как обычный текст без генерации <code>tok-*</code> HTML-разметки. Символы вроде <code>&#64;Mixin</code>, <code>&#64;Inject</code> и <code>&#64;SubscribeEvent</code> должны отображаться буквально, без появления <code>class="tok-anno"</code> или других служебных фрагментов.</div>
 <div class="callout"><b>🧭 Как читать подсказки:</b> ниже я буду отмечать примерное место файла, место регистрации объекта и точку, где обычно пишется собственный метод. Названия папок можно менять — важна сама роль файла.</div>
 <section id="start"><h2>1. Старт проекта</h2><p>Для NeoForge 1.21.1 используется Java 21. Официальный MDK можно создать через шаблон NeoGradle/ModDevGradle; после импорта Gradle IDE получает исходники Minecraft и NeoForge, что особенно важно для поиска реальных сигнатур API.</p><div class="callout ok"><b>Правило:</b> документация объясняет API, но исходники Minecraft/NeoForge остаются главным источником истины, когда сигнатура или поведение неочевидны.</div><pre><button class="copy">Copy</button>./gradlew runClient
 ./gradlew runServer
 ./gradlew build</pre><p>Сервер рекомендуется проверять отдельно: мод может работать в integrated server и при этом содержать ошибку, проявляющуюся на dedicated server.</p><p><a class="ext" href="https://docs.neoforged.net/docs/1.21.1/gettingstarted/">Официальный Getting Started ↗</a></p></section>
+
 <section id="architecture"><h2>2. Архитектура мода</h2><div class="grid"><div class="card"><h3>Common</h3><p>Регистрации, gameplay, data, серверная логика, networking payloads, команды, world logic.</p></div><div class="card"><h3>Client</h3><p>Рендереры, модели, screens, key mappings, particle providers, client-only events. Не загружать клиентские классы на dedicated server.</p></div><div class="card"><h3>Resources</h3><p><code>src/main/resources</code>: <code>assets/&lt;modid&gt;</code>, <code>data/&lt;modid&gt;</code>, <code>neoforge.mods.toml</code> и metadata.</p></div></div><pre><button class="copy">Copy</button>src/main/java/com/example/mod/
   ExampleMod.java
   registry/ModBlocks.java
@@ -36,7 +38,9 @@ src/main/resources/
   assets/examplemod/...
   data/examplemod/...</pre></section>
 <div class="callout"><b>📍 Где создавать:</b> Java-классы обычно лежат в <code>src/main/java/...</code>, ресурсы — в <code>src/main/resources/...</code>. Папки <code>registry/</code>, <code>event/</code>, <code>client/</code> — удобная организация, но не обязательные имена.</div>
+
 <section id="workflow"><h2>2.2. Пошаговые цепочки: что делать по порядку</h2><p>Если не знаете, с чего начать объект, идите по цепочке сверху вниз. На каждом шаге сначала добейтесь минимально рабочего результата, а затем переходите к следующему.</p><div class="grid"><div class="card"><h3>🧱 Item</h3><ol><li>Создайте <code>item/RubyItem.java</code>, только если нужно собственное поведение.</li><li>Зарегистрируйте имя в <code>registry/ModItems.java</code>.</li><li>Напишите <code>use(...)</code>, <code>hurtEnemy(...)</code> или другой нужный метод.</li><li>Добавьте <code>assets/modid/models/item/ruby.json</code> и текстуру.</li><li>Добавьте перевод в <code>assets/modid/lang/</code>.</li><li>Запустите клиент и проверьте registry → модель → текстуру → поведение.</li></ol></div><div class="card"><h3>🧱 Block</h3><ol><li>Создайте блок в <code>block/</code>, если нужна своя логика.</li><li>Зарегистрируйте Block в <code>registry/ModBlocks.java</code>.</li><li>Зарегистрируйте BlockItem в <code>registry/ModItems.java</code>.</li><li>Для состояния используйте BlockState; для данных — переходите к BlockEntity.</li><li>Добавьте blockstate/model/texture и перевод.</li><li>Проверьте размещение, ломание, модель и drops.</li></ol></div><div class="card"><h3>⚙️ BlockEntity / машина</h3><ol><li>Создайте <code>block/entity/MachineBlockEntity.java</code>.</li><li>Зарегистрируйте <code>BlockEntityType</code> в <code>registry/ModBlockEntities.java</code>.</li><li>Свяжите его с Block через <code>newBlockEntity(...)</code>.</li><li>Напишите <code>tick(...)</code> для серверной обработки.</li><li>Добавьте сохранение данных и capability <code>IItemHandler</code>, если нужен инвентарь.</li><li>Если нужен GUI: создайте Menu → зарегистрируйте Menu → создайте Screen → зарегистрируйте Screen.</li></ol></div><div class="card"><h3>👾 Entity / моб</h3><ol><li>Создайте <code>entity/...</code> класс сущности.</li><li>Зарегистрируйте <code>EntityType</code> в <code>registry/ModEntities.java</code>.</li><li>Для моба добавьте attributes, AI и при необходимости spawn rules.</li><li>Напишите <code>tick()</code> или другие методы только для собственной логики.</li><li>В <code>client/</code> создайте/зарегистрируйте renderer и model.</li><li>Проверьте через <code>/summon modid:name</code>, затем отдельно проверяйте AI и внешний вид.</li></ol></div><div class="card"><h3>🖥️ GUI</h3><ol><li>Определите, какие данные нужны серверу.</li><li>Создайте <code>Menu</code> и добавьте слоты/data slots.</li><li>Зарегистрируйте Menu в <code>registry/ModMenus.java</code>.</li><li>Создайте <code>Screen</code> и напишите <code>renderBg(...)</code> / обработчики ввода.</li><li>Зарегистрируйте Screen в клиентском событии.</li><li>Для сложных действий добавьте network payload и проверку на сервере.</li></ol></div><div class="card"><h3>✨ Particle</h3><ol><li>Зарегистрируйте <code>ParticleType</code>.</li><li>Добавьте описание/ресурсы частицы.</li><li>В client-коде зарегистрируйте provider.</li><li>Создайте собственный Particle-класс только если sprite particle недостаточно.</li><li>Вызовите частицу из серверной/клиентской логики в зависимости от задачи.</li><li>Проверьте atlas, texture и provider, если частица невидима.</li></ol></div><div class="card"><h3>📡 Network payload</h3><ol><li>Создайте <code>network/payload/MyPayload.java</code>.</li><li>Опишите поля и <code>StreamCodec</code>.</li><li>Зарегистрируйте payload в <code>network/ModNetworking.java</code>.</li><li>Напишите handler как отдельный метод.</li><li>На сервере валидируйте игрока, позицию, расстояние и входные данные.</li><li>Проверяйте отдельно client → server и server → client.</li></ol></div><div class="card"><h3>📌 Event</h3><ol><li>Выберите нужный event и правильную event bus.</li><li>Создайте <code>event/ModEvents.java</code>.</li><li>Напишите метод с <code>&#64;SubscribeEvent</code>.</li><li>Зарегистрируйте класс/метод там, где этого требует выбранный bus.</li><li>Внутри метода отделите client/server логику.</li><li>Если событие не срабатывает, первым делом проверьте bus и регистрацию.</li></ol></div></div><div class="callout ok"><b>Универсальная схема:</b> <code>1. Файл класса → 2. Регистрация → 3. Собственный метод → 4. Связи с другими системами → 5. JSON/текстуры → 6. Тест в клиенте и dedicated server</code>. Не каждый объект требует всех шести шагов.</div></section>
+
 <section id="class-skeletons"><h2>2.3. Минимальные скелеты классов</h2><p>Ниже не «магические» готовые системы, а короткие каркасы, от которых удобно начинать реальный класс. Имена пакетов и регистрации показаны намеренно явно.</p><div class="grid"><div class="card"><h3>Обычный Item</h3><pre><button class="copy">Copy</button>public class RubyItem extends Item {
     public RubyItem(Properties properties) {
         super(properties);
@@ -77,6 +81,7 @@ src/main/resources/
         // draw background
     }
 }</pre></div></div><div class="callout"><b>Как читать каркас:</b> конструктор получает состояние/зависимости, переопределённый метод является точкой поведения, а регистрация связывает класс с Minecraft. Сначала добейтесь минимального рабочего класса, затем добавляйте sync, сохранение, capability и client rendering по необходимости.</div></section>
+
 <section id="registries"><h2>3. Регистрация</h2><div class="callout"><b>📍 Где регистрировать:</b> обычно <code>registry/ModItems.java</code>, <code>ModBlocks.java</code>, <code>ModEntities.java</code> и т. п. Здесь объект получает имя вроде <code>ruby</code>; сам класс поведения можно хранить в другом файле.</div><p>Регистрация делает объект известным игре. Для большинства объектов используйте <code>DeferredRegister</code>; для предметов и некоторых специализированных реестров есть удобные helpers.</p><pre><button class="copy">Copy</button>public final class ModItems {
     public static final DeferredRegister.Items ITEMS =
         DeferredRegister.createItems(ExampleMod.MOD_ID);
@@ -89,6 +94,7 @@ src/main/resources/
         ITEMS.register(modBus);
     }
 }</pre><p>Конкретные helper-методы могут различаться между минорными 1.21.x; если IDE показывает другую сигнатуру, доверяйте текущему API вашего MDK.</p><p><a class="ext" href="https://docs.neoforged.net/docs/1.21.1/concepts/registries/">Registries ↗</a> · <a class="ext" href="https://docs.neoforged.net/docs/1.21.1/items/">Items ↗</a></p></section>
+
 <section id="items"><h2>4. Предметы</h2><div class="callout"><b>📍 Где создавать метод:</b> если предмету нужно своё поведение, создайте отдельный класс вроде <code>MagicWand.java</code>. Переопределяемый <code>use(...)</code> — метод, который Minecraft вызывает при использовании предмета.</div><h3>Базовый Item</h3><pre><button class="copy">Copy</button>public static final DeferredItem<Item> RUBY = ITEMS.registerItem(
     "ruby",
     Item::new,
@@ -104,6 +110,9 @@ src/main/resources/
         return InteractionResult.SUCCESS;
     }
 }</pre><p>Помните о разделении client/server: изменение мира обычно должно происходить на серверной стороне, а визуальный эффект — на клиентской.</p></section>
+<section id="item-details"><h2>4.1. Предметы: поведение и ItemStack</h2><p>У <code>Item</code> есть несколько точек расширения. Выбирайте их по действию: <code>use</code> для ПКМ, <code>useOn</code> для взаимодействия с блоком, <code>finishUsingItem</code> для завершения длительного использования, <code>releaseUsing</code> для отпускания кнопки, <code>hurtEnemy</code> для атак и <code>inventoryTick</code> для периодической логики.</p><p><code>Item</code> описывает тип предмета, а <code>ItemStack</code> — конкретный экземпляр с количеством, durability, enchantments и Data Components. Изменяемое состояние конкретного предмета обычно должно жить в <code>ItemStack</code>, а не в полях singleton-объекта <code>Item</code>.</p><pre><button class="copy">Copy</button>ItemStack stack = player.getItemInHand(hand);&#10;stack.set(DataComponents.CUSTOM_NAME, Component.literal("Ruby Wand"));&#10;stack.hurtAndBreak(1, player, EquipmentSlot.MAINHAND);</pre><h3>Инструменты и Item Abilities</h3><p>В NeoForge 1.21.1 современные инструменты могут использовать <code>Tool</code> Data Component, правила добычи, атрибуты и <code>ItemAbility</code>. Это позволяет делать multitool-подобные предметы без обязательного наследования от одного vanilla tool-класса. </p><div class="callout"><b>Практическое правило:</b> сначала определите роль предмета, затем выбирайте комбинацию Item methods, components, attributes и abilities.</div></section>
+<section id="enchantments"><h2>4.2. Зачарования</h2><p>В 1.21.1 зачарования являются datapack registry objects. Собственное зачарование не следует представлять как просто статическое Java-значение: его данные загружаются как registry/datapack data, а ссылки работают через registry holders и vanilla helpers.</p><p>Особенно важны <code>supported_items</code> и <code>primary_items</code>: первое задаёт поддерживаемые предметы, второе — подмножество, подходящее для получения через стол зачарований.</p><pre><button class="copy">Copy</button>{&#10;  "description": {"translate": "enchantment.examplemod.power"},&#10;  "supported_items": "#examplemod:enchantable/my_tools",&#10;  "primary_items": "#examplemod:enchantable/my_tools"&#10;}</pre><p>Для собственных инструментов проверяйте соответствующие <code>minecraft:enchantable/*</code> tags. Зачарования ItemStack связаны с Data Components, поэтому не создавайте вторую параллельную систему хранения без необходимости.</p><div class="callout warn"><b>Версионная оговорка:</b> JSON и Java helpers для enchantments менялись внутри 1.21.x. Конкретные holder/codec вызовы перед copy-paste сверяйте с MDK 1.21.1.</div></section>
+
 <section id="blocks"><h2>5. Блоки</h2><div class="callout"><b>📍 Где создавать:</b> регистрация блока — <code>registry/ModBlocks.java</code>; <code>BlockItem</code> — обычно в <code>registry/ModItems.java</code>; собственная логика блока — отдельный класс в <code>block/</code>. Если нужен инвентарь/таймер/энергия, переходите к BlockEntity.</div><pre><button class="copy">Copy</button>public static final DeferredRegister.Blocks BLOCKS =
     DeferredRegister.createBlocks(ExampleMod.MOD_ID);
 
@@ -118,6 +127,8 @@ public static void register(IEventBus bus) {
 }</pre><h3>Block + BlockItem</h3><pre><button class="copy">Copy</button>public static final DeferredItem<BlockItem> RUBY_BLOCK_ITEM = ITEMS.registerSimpleBlockItem(
     "ruby_block", RUBY_BLOCK
 );</pre><p>Block states предназначены для конечного набора вариантов: facing, powered, waterlogged и т. п. Для больших/динамических данных используйте BlockEntity.</p></section>
+<section id="block-details"><h2>5.1. BlockState и взаимодействия</h2><p><code>BlockState</code> — конечный набор свойств блока: например facing, powered, waterlogged или вариант формы. Если данные произвольны, велики или требуют сохранения, это сигнал перейти к <code>BlockEntity</code>.</p><h3>Свойства состояния</h3><p>Свойство объявляется в классе блока, добавляется в state definition и меняется через <code>state.setValue(...)</code>. Каждый набор значений является отдельным BlockState.</p><pre><button class="copy">Copy</button>public static final BooleanProperty POWERED = BlockStateProperties.POWERED;&#10;&#10;&#64;Override&#10;protected void createBlockStateDefinition(StateDefinition.Builder&lt;Block, BlockState&gt; builder) {&#10;    builder.add(POWERED);&#10;}&#10;&#10;BlockState next = state.setValue(POWERED, true);</pre><h3>ПКМ по блоку</h3><p>Для блока без предмета используйте современный interaction path <code>useWithoutItem</code>; <code>BlockHitResult</code> содержит информацию о месте попадания и стороне блока.</p><h3>Когда BlockState, а когда BlockEntity</h3><table><tr><th>Нужно хранить</th><th>Выбор</th></tr><tr><td>Facing / powered / waterlogged</td><td>BlockState</td></tr><tr><td>Инвентарь</td><td>BlockEntity + capability</td></tr><tr><td>Прогресс машины</td><td>BlockEntity</td></tr><tr><td>Сложное произвольное состояние</td><td>BlockEntity</td></tr></table></section>
+
 <section id="be"><h2>6. BlockEntity</h2><div class="callout"><b>📍 Где создавать:</b> класс, например <code>block/entity/MachineBlockEntity.java</code>; его тип регистрируется отдельно, например в <code>registry/ModBlockEntities.java</code>. Метод <code>tick(...)</code> — место для периодической серверной логики.</div><p>BlockEntity хранит данные, которые не стоит кодировать в BlockState: инвентарь, энергию, таймеры, сложное состояние. Нужны отдельные <code>BlockEntity</code> и зарегистрированный <code>BlockEntityType</code>.</p><pre><button class="copy">Copy</button>public class MachineBlockEntity extends BlockEntity {
     private int progress;
 
@@ -131,7 +142,8 @@ public static void register(IEventBus bus) {
         be.progress++;
         be.setChanged();
     }
-}</pre><div class="callout">Если данные должны переживать сохранение мира — сериализируйте их через подходящий data/storage механизм. Для инвентарей в NeoForge 1.21.1 предпочтительна capability-модель <code>IItemHandler</code>, а не старые Container-паттерны.</div><p><a class="ext" href="https://docs.neoforged.net/docs/1.21.1/blockentities/">Block Entities ↗</a> · <a class="ext" href="https://docs.neoforged.net/docs/1.21.1/inventories/capabilities/">Capabilities ↗</a></p></section>
+}</pre><div class="callout">Если данные должны переживать сохранение мира — сериализуйте их через подходящий data/storage механизм. Для инвентарей в NeoForge 1.21.1 предпочтительна capability-модель <code>IItemHandler</code>, а не старые Container-паттерны.</div><p><a class="ext" href="https://docs.neoforged.net/docs/1.21.1/blockentities/">Block Entities ↗</a> · <a class="ext" href="https://docs.neoforged.net/docs/1.21.1/inventories/capabilities/">Capabilities ↗</a></p></section>
+
 <section id="entities"><h2>7. Сущности</h2><div class="callout"><b>📍 Где создавать:</b> <code>entity/RubyProjectile.java</code> — игровая логика; <code>registry/ModEntities.java</code> — EntityType; <code>client/</code> — renderer/model. Не смешивайте client-only renderer с common-классом сущности.</div><p>Типичная сущность состоит из <code>Entity</code>-класса, зарегистрированного <code>EntityType</code> и клиентского <code>EntityRenderer</code>. Для мобов добавляются AI/attributes/spawn rules; для projectile — логика движения и столкновений.</p><pre><button class="copy">Copy</button>public class RubyProjectile extends Entity {
     public RubyProjectile(EntityType<? extends RubyProjectile> type, Level level) {
         super(type, level);
@@ -148,11 +160,15 @@ public static void register(IEventBus bus) {
         }
     }
 }</pre><p>Для синхронизации используйте SynchedEntityData, spawn data или собственные network payloads в зависимости от типа данных.</p><p><a class="ext" href="https://docs.neoforged.net/docs/entities/">Entities ↗</a> · <a class="ext" href="https://docs.neoforged.net/docs/entities/data/">Entity Data ↗</a></p></section>
+<section id="entity-details"><h2>7.1. AI, projectile и синхронизация</h2><h3>Обычный моб</h3><p>Для мобов отдельно рассматривайте четыре слоя: <code>EntityType</code>, attributes, AI goals и spawn rules. Не стоит помещать всё в <code>tick()</code>: GoalSelector уже предоставляет систему приоритетов и жизненного цикла поведения.</p><h3>GoalSelector</h3><p>Обычно цели добавляются в <code>registerGoals()</code>. Низкий номер означает более высокий приоритет. Комбинируйте movement goals, target goals и look goals, а не создавайте один огромный метод AI.</p><pre><button class="copy">Copy</button>&#64;Override&#10;protected void registerGoals() {&#10;    goalSelector.addGoal(0, new FloatGoal(this));&#10;    goalSelector.addGoal(2, new RandomStrollGoal(this, 1.0));&#10;    goalSelector.addGoal(3, new LookAtPlayerGoal(this, Player.class, 8.0f));&#10;}</pre><h3>Projectile</h3><p>Projectile обычно имеет отдельную логику движения, столкновения и результата попадания. Renderer нужен только для клиентского представления. Урон и изменение мира должны выполняться на серверной стороне.</p><h3>Синхронизация Entity</h3><p>Для небольших значений, которые должны быть видны клиенту, используйте <code>SynchedEntityData</code>. Для данных, необходимых только при создании сущности, подходит spawn data. Для сложных или событийных обновлений используйте network payload.</p><h3>Если моб есть, но не появляется</h3><ol><li>Проверьте EntityType и attributes.</li><li>Проверьте spawn placement и biome/category ограничения.</li><li>Проверьте свет, высоту и условия спавна.</li><li>Проверьте, что тестовый <code>/summon</code> работает.</li><li>Только после этого отлаживайте естественный spawn.</li></ol></section>
+
 <section id="particles"><h2>8. Частицы</h2><p>У частиц есть тип, клиентский provider и визуальная реализация. Простые sprite particles можно описать ресурсом; более сложные могут иметь собственный <code>ParticleOptions</code>, <code>MapCodec</code> и <code>StreamCodec</code>.</p><pre><button class="copy">Copy</button>public static final DeferredRegister<ParticleType<?>> PARTICLES =
     DeferredRegister.create(Registries.PARTICLE_TYPE, MOD_ID);
 
 public static final Supplier<SimpleParticleType> SPARK =
     PARTICLES.register("spark", () -> new SimpleParticleType(false));</pre><p>На клиенте регистрируется provider, который создаёт экземпляр particle. Для анимаций часто достаточно atlas/sprite sheet, а не собственного OpenGL-кода.</p><p><a class="ext" href="https://docs.neoforged.net/docs/1.21.1/resources/client/particles/">Particles ↗</a></p></section>
+<section id="sounds-details"><h2>8.1. Звуки</h2><p>Звуковая система состоит из зарегистрированного <code>SoundEvent</code> и ресурса <code>sounds.json</code>, который описывает реальные audio files. Игровой код должен ссылаться на зарегистрированный sound event, а не напрямую на файл.</p><h3>Структура ресурсов</h3><pre><button class="copy">Copy</button>assets/examplemod/sounds/stalker_living.ogg&#10;assets/examplemod/sounds.json</pre><pre><button class="copy">Copy</button>{&#10;  "stalker_living": {&#10;    "sounds": ["examplemod:stalker_living"]&#10;  }&#10;}</pre><p>Если звук не воспроизводится, проверяйте namespace, путь без расширения в JSON, формат файла и регистрацию <code>SoundEvent</code>. Для positional sounds учитывайте, что источник звука находится в мире, а не только на экране клиента.</p></section>
+
 <section id="gui"><h2>9. Меню и GUI</h2><div class="callout"><b>📍 Где создавать:</b> <code>MachineMenu.java</code> — слоты и серверное состояние; <code>MachineScreen.java</code> — клиентская отрисовка; <code>ModMenus.java</code> — регистрация меню. Методы <code>renderBg</code> и обработчики ввода принадлежат Screen.</div><p>В NeoForge/vanilla GUI обычно разделяется на серверный <code>AbstractContainerMenu</code> и клиентский <code>AbstractContainerScreen</code>. Menu отвечает за слоты и синхронизацию данных; Screen — за отрисовку и ввод.</p><pre><button class="copy">Copy</button>public class MachineMenu extends AbstractContainerMenu {
     public MachineMenu(int id, Inventory inv) {
         super(ModMenus.MACHINE.get(), id);
@@ -175,16 +191,18 @@ public class MachineScreen extends AbstractContainerScreen<MachineMenu> {
         // g.blit(...)
     }
 }</pre><p>Для инвентарей используйте <code>SlotItemHandler</code> с capability. Числовые значения можно синхронизировать через <code>DataSlot</code>, а сложные данные — packet/networking.</p><p><a class="ext" href="https://docs.neoforged.net/docs/1.21.1/gui/menus/">Menus ↗</a></p></section>
-<section id="machine-example"><h2>9.1. Мини-пример: машина с GUI</h2><p>Ниже цельный учебный скелет: блок открывает меню, BlockEntity хранит два слота и прогресс, Menu связывает инвентарь с GUI, а Screen рисует клиентскую часть. Это база для печи, дробилки, генератора и других машин.</p><h3>1) Блок и открытие меню</h3><pre><button class="copy">Copy</button>public class MachineBlock extends BaseEntityBlock {
+<section id="screen-details"><h2>9.1. Screen: координаты, widgets и отрисовка</h2><p>Screen работает в относительной системе координат: <code>x</code> увеличивается слева направо, <code>y</code> — сверху вниз. Масштаб зависит от GUI Scale, поэтому интерфейс нельзя привязывать к физическим пикселям окна.</p><h3>Позиционирование относительно GUI</h3><p>У <code>AbstractContainerScreen</code> поля <code>leftPos</code> и <code>topPos</code> обозначают верхний левый угол фонового изображения. От них удобно строить все координаты.</p><table><tr><th>Расположение</th><th>Формула</th></tr><tr><td>Верхний левый</td><td><code>x=leftPos+margin</code>, <code>y=topPos+margin</code></td></tr><tr><td>Верхний правый</td><td><code>x=leftPos+imageWidth-elementWidth-margin</code></td></tr><tr><td>Нижний левый</td><td><code>y=topPos+imageHeight-elementHeight-margin</code></td></tr><tr><td>Нижний правый</td><td><code>x=leftPos+imageWidth-elementWidth-margin</code>, <code>y=topPos+imageHeight-elementHeight-margin</code></td></tr><tr><td>По центру</td><td><code>x=leftPos+(imageWidth-elementWidth)/2</code>, <code>y=topPos+(imageHeight-elementHeight)/2</code></td></tr><tr><td>Центр текста</td><td><code>x=leftPos+(imageWidth-font.width(text))/2</code></td></tr></table><h3>Когда выполнять расчёты</h3><p>Динамические координаты и создание widgets следует делать в <code>init()</code>, потому что Screen переинициализируется после изменения размера окна.</p><h3>Widgets</h3><p><code>addWidget</code> — интерактивный, но не отрисовываемый; <code>addRenderableOnly</code> — только отрисовка; <code>addRenderableWidget</code> — интерактивный и отрисовываемый вариант. Для обычных кнопок и EditBox чаще всего нужен последний.</p><pre><button class="copy">Copy</button>&#64;Override&#10;protected void init() {&#10;    super.init();&#10;    int w = 80, h = 20;&#10;    int x = leftPos + (imageWidth - w) / 2;&#10;    int y = topPos + imageHeight - h - 8;&#10;    addRenderableWidget(Button.builder(&#10;        Component.literal("Start"),&#10;        button -&gt; sendStartPayload()&#10;    ).bounds(x, y, w, h).build());&#10;}</pre><h3>Жизненный цикл</h3><p><code>init()</code> — построение интерфейса; <code>tick()</code> — client-side логика; <code>render()</code> — общий рендер; <code>renderBg()</code> — фон container screen; <code>renderLabels()</code> — подписи; <code>onClose()</code> — закрытие; <code>removed()</code> — окончательная очистка.</p><h3>Слои</h3><p>Обычно фон рисуется первым, затем labels/widgets, затем tooltips. Для texture используйте <code>GuiGraphics#blit</code>; для простых индикаторов — <code>fill</code>, <code>hLine</code>, <code>vLine</code>.</p></section><section id="menu-details"><h2>9.2. Menu: слоты и синхронизация</h2><p><code>Menu</code> — view над данными, а не само хранилище. Он связывает Screen с BlockEntity, inventory или другим data holder. <code>MenuType</code> регистрируется, а конкретные Menu создаются динамически.</p><h3>Порядок слотов</h3><p>Индексы критичны для <code>quickMoveStack</code>. Если сначала добавлены два слота машины, они занимают 0–1; затем инвентарь игрока и hotbar получают следующие индексы. Эти диапазоны должны совпадать с shift-click логикой.</p><pre><button class="copy">Copy</button>// machine slots: 0..1&#10;addSlot(new SlotItemHandler(machine.getInventory(), 0, 56, 35));&#10;addSlot(new SlotItemHandler(machine.getInventory(), 1, 116, 35));&#10;&#10;// player inventory: 2..28&#10;// hotbar: 29..37</pre><h3>quickMoveStack</h3><p>Shift-click вызывает <code>quickMoveStack</code>. Обычно используется <code>moveItemStackTo</code> для перемещения между диапазонами. Этот метод определяет реальные правила быстрых перемещений.</p><h3>DataSlot</h3><p><code>DataSlot</code> подходит для небольших числовых значений GUI: progress, energy level, timer. Более сложные структуры лучше синхронизировать собственным payload.</p><h3>Клиентский Menu</h3><p>Клиент иногда создаёт Menu с dummy holder. Если Screen должен знать позицию BlockEntity или другие дополнительные данные, для открытия меню можно использовать <code>IContainerFactory</code> и передать их из сервера.</p></section>
+
+<section id="machine-example"><h2>9.3. Мини-пример: машина с GUI</h2><p>Ниже цельный учебный скелет: блок открывает меню, BlockEntity хранит два слота и прогресс, Menu связывает инвентарь с GUI, а Screen рисует клиентскую часть. Это база для печи, дробилки, генератора и других машин.</p><h3>1) Блок и открытие меню</h3><pre><button class="copy">Copy</button>public class MachineBlock extends BaseEntityBlock {
     public MachineBlock(Properties properties) {
         super(properties);
     }
 
-    public static MapCodec<MachineBlock> codec() {
+    public static MapCodec&lt;MachineBlock&gt; codec() {
         return simpleCodec(MachineBlock::new);
     }
 
-    &#64;Override protected MapCodec<? extends BaseEntityBlock> codec() {
+    &#64;Override protected MapCodec&lt;? extends BaseEntityBlock&gt; codec() {
         return codec();
     }
 
@@ -247,11 +265,11 @@ public class MachineScreen extends AbstractContainerScreen<MachineMenu> {
         addSlot(new SlotItemHandler(machine.getInventory(), 0, 56, 35));
         addSlot(new SlotItemHandler(machine.getInventory(), 1, 116, 35));
 
-        for (int row = 0; row < 3; row++)
-            for (int col = 0; col < 9; col++)
+        for (int row = 0; row &lt; 3; row++)
+            for (int col = 0; col &lt; 9; col++)
                 addSlot(new Slot(inv, col + row * 9 + 9,
                         8 + col * 18, 84 + row * 18));
-        for (int col = 0; col < 9; col++)
+        for (int col = 0; col &lt; 9; col++)
             addSlot(new Slot(inv, col, 8 + col * 18, 142));
     }
 
@@ -264,7 +282,7 @@ public class MachineScreen extends AbstractContainerScreen<MachineMenu> {
     &#64;Override public ItemStack quickMoveStack(Player player, int index) {
         return ItemStack.EMPTY; // учебный пример: shift-click добавляется отдельно
     }
-}</pre><h3>4) Screen</h3><pre><button class="copy">Copy</button>public class MachineScreen extends AbstractContainerScreen<MachineMenu> {
+}</pre><h3>4) Screen</h3><pre><button class="copy">Copy</button>public class MachineScreen extends AbstractContainerScreen&lt;MachineMenu&gt; {
     public MachineScreen(MachineMenu menu, Inventory inv, Component title) {
         super(menu, inv, title);
         this.imageWidth = 176;
@@ -284,8 +302,9 @@ public class MachineScreen extends AbstractContainerScreen<MachineMenu> {
 public static void registerScreens(RegisterMenuScreensEvent event) {
     event.register(ModMenus.MACHINE.get(), MachineScreen::new);
 }</pre><div class="callout ok"><b>Итоговая цепочка:</b> Block → BlockEntity → Menu → Screen. В реальной машине добавьте сохранение инвентаря, capability <code>IItemHandler</code>, проверку рецепта/выходного слота, синхронизацию прогресса и корректный <code>quickMoveStack</code>.</div></section>
-<section id="mob-example"><h2>9.2. Мини-пример: простой моб</h2><p>Для обычного наземного моба удобно наследоваться от <code>PathfinderMob</code>. Серверная сущность содержит AI и состояние, а клиентская часть отвечает за модель и renderer.</p><h3>1) Entity-класс</h3><pre><button class="copy">Copy</button>public class RubyCreature extends PathfinderMob {
-    protected RubyCreature(EntityType<? extends PathfinderMob> type, Level level) {
+
+<section id="mob-example"><h2>9.4. Мини-пример: простой моб</h2><p>Для обычного наземного моба удобно наследоваться от <code>PathfinderMob</code>. Серверная сущность содержит AI и состояние, а клиентская часть отвечает за модель и renderer.</p><h3>1) Entity-класс</h3><pre><button class="copy">Copy</button>public class RubyCreature extends PathfinderMob {
+    protected RubyCreature(EntityType&lt;? extends PathfinderMob&gt; type, Level level) {
         super(type, level);
     }
 
@@ -295,11 +314,11 @@ public static void registerScreens(RegisterMenuScreensEvent event) {
         goalSelector.addGoal(3, new LookAtPlayerGoal(this, Player.class, 8.0f));
         goalSelector.addGoal(4, new RandomLookAroundGoal(this));
     }
-}</pre><h3>2) EntityType и атрибуты</h3><pre><button class="copy">Copy</button>public static final DeferredRegister<EntityType<?>> ENTITIES =
+}</pre><h3>2) EntityType и атрибуты</h3><pre><button class="copy">Copy</button>public static final DeferredRegister&lt;EntityType&lt;?&gt;&gt; ENTITIES =
     DeferredRegister.create(Registries.ENTITY_TYPE, MOD_ID);
 
-public static final Supplier<EntityType<RubyCreature>> RUBY_CREATURE =
-    ENTITIES.register("ruby_creature", () ->
+public static final Supplier&lt;EntityType&lt;RubyCreature&gt;&gt; RUBY_CREATURE =
+    ENTITIES.register("ruby_creature", () -&gt;
         EntityType.Builder.of(RubyCreature::new, MobCategory.CREATURE)
             .sized(0.8f, 1.2f)
             .build(ResourceLocation.fromNamespaceAndPath(MOD_ID, "ruby_creature").toString()));
@@ -317,182 +336,13 @@ public static void registerEntityRenderers(EntityRenderersEvent.RegisterRenderer
     event.registerEntityRenderer(ModEntities.RUBY_CREATURE.get(),
         MobRenderer::new); // замените на renderer/model из вашего MDK
 }</pre><div class="callout warn"><b>Важно:</b> последний фрагмент — схема регистрации, а не готовая модель. Для красивого моба нужен конкретный <code>ModelLayerLocation</code>, модель/слои и renderer с текстурой; эти client API особенно чувствительны к версии.</div><p>После регистрации проверьте spawn rules, яйцо призыва или команду <code>/summon examplemod:ruby_creature</code>. Если моб существует, но невидим, сначала проверяйте client renderer/model/texture, а не AI.</p></section>
-<p>Клиентская часть включает renderers, screens, particle providers, key mappings и визуальные эффекты. Архитектурно держите client-only классы в отдельном пакете и регистрируйте их только в клиентском lifecycle/event.</p><h3>Model Layers</h3><p>Model Layers позволяют добавлять слои к моделям без изменения оригинальных моделей Minecraft.</p><pre><button class="copy">Copy</button>// src/main/java/com/example/mod/client/model/ExampleModelLayer.java
-public record ExampleModelLayer(
-    String name,
-    ModelLayerSettings settings
-) {
-    public static final Supplier&lt;ModelLayerDefinition&lt;&gt;&gt;
-        EXAMPLE_LAYER = ModelLayerGenerator.create("example_layer", () -> new ExampleModelLayer(
-            "example_layer",
-            new ModelLayerSettings.Builder()
-                .parent(ModelLayers.CREATURE)
-                .build()
-        ));
-}</pre><div class="callout warn"><b>Важно:</b> Клиентский код должен быть изолирован от серверной части. Загрузка client-only классов на dedicated server приведёт к падению.</div>
-<h3>Model Layer Location</h3><p>Для создания кастомных model layers используется <code>ModelLayerLocation</code>.</p><pre><button class="copy">Copy</button>// src/main/java/com/example/mod/client/model/ExampleModelLayerLocation.java
-public record ExampleModelLayerLocation(
-    String namespace,
-    String path
-) implements ModelLayerLocation {
-    public static final Type&lt;ModelLayerLocation&gt; TYPE = new Type<>(
-        ResourceLocation.fromNamespaceAndPath("example_mod", "example_layer")
-    );
-}</pre><h3>Entity Renderer</h3><p>Создание entity renderer для отрисовки сущностей.</p><pre><button class="copy">Copy</button>// src/main/java/com/example/mod/client/renderer/ExampleEntityRenderer.java
-public record ExampleEntityRenderer(
-    EntityType&lt;? extends Entity&gt;
-) implements EntityRenderer {
-    private final ModelLayerLocation layerLocation;
 
-    public ExampleEntityRenderer(EntityType&lt;? extends Entity&gt; type) {
-        this.layerLocation = new ExampleModelLayerLocation("example_mod", "entity");
-    }
-
-    &#64;Override
-    protected void render(
-        Entity entity,
-        float delta,
-        MatrixStack matrixStack,
-        PosePose pose,
-        ParticleRenderer particleRenderer,
-        Camera camera,
-        int packedLight,
-        int packedOverlay
-    ) {
-        // Отрисовка модели
-        PoseStack poseStack = new PoseStack();
-        poseStack.last().pose()
-            .translate(entity.getX(), entity.getY(), entity.getZ());
-        
-        Matrix4f matrix = matrixStack.perspective(
-            30.0f, (double) width / height,
-            0.1, 1e8
-        );
-        matrixStack.multiply(matrix);
-        poseStack.add(poseStack);
-        
-        ModelRenderer modelRenderer = new ModelRenderer(
-            new ModelLayer(entity, layerLocation),
-            new ModelBaker() // или ModelLoader
-        );
-        
-        modelRenderer.render(particleRenderer, matrixStack, packedLight, packedOverlay);
-    }
-}</pre><h3>Client-only Classes</h3><p>Используйте <code>&#64;ModClientEvent</code> для регистрации client-only классов.</p><pre><button class="copy">Copy</button>// src/main/java/com/example/mod/client/ExampleClientMod.java
-&#64;Mod.EventBusSubscriber(modid = "example_mod", bus = ModEventBus.class)
-public final class ExampleClientMod {
-    public static void init(IEventBus modBus) {
-        // Регистрация client-only классов
-        modBus.addListener(ExampleClientMod::registerScreens);
-    }
-
-    private static void registerScreens(RegisterMenuScreensEvent event) {
-        // Только для клиента
-        event.register(...);
-    }
-}</pre><h3>Key Mappings</h3><p>Регистрация кастомных клавиш.</p><pre><button class="copy">Copy</button>// src/main/java/com/example/mod/client/ExampleKeyMappings.java
-&#64;SubscribeEvent
-public static void registerKeyMappings(ClientKeyMappingRegistrationEvent event) {
-    KeyMapping keyMapping = new KeyMapping(
-        "example_mod.example_key",
-        MinecraftKeyMapper.getInstance().createKey("E", KeyCode.E),
-        Component.literal("Example")
-    );
-    
-    event.register(keyMapping);
-}</pre><h3>Client Events</h3><p>Клиентские события для client-only логики.</p><pre><button class="copy">Copy</button>// src/main/java/com/example/mod/client/ExampleClientEvents.java
-&#64;Mod.EventBusSubscriber(modid = "example_mod", bus = ModEventBus.class)
-public final class ExampleClientEvents {
-    &#64;SubscribeEvent
-    public static void onClientTick(ClientTickEvent event) {
-        // Клиентская логика при каждом тике
-    }
-}</pre></section>
-<section id="sound-events"><h2>9.3. Звуки</h2><div class="callout ok"><b>Что можно делать:</b>
-<ul><li>Регистрация звуков через <code>RegisterSoundsEvent</code></li><li>Создание sound events для событий игры</li><li>Использование sound event bus</li></ul></div><h3>Регистрация звуков</h3><pre><button class="copy">Copy</button>// src/main/java/com/example/mod/sound/ModSounds.java
-&#64;SubscribeEvent
-public static void registerSounds(RegisterSoundsEvent event) {
-    // Звук для открытия меню
-    event.register(
-        "open_menu",
-        SoundType.createCustomSoundData(
-            ResourceLocation.fromNamespaceAndPath("example_mod", "open_menu"),
-            1.0f,
-            1.0f
-        )
-    );
-    
-    // Звук для использования предмета
-    event.register(
-        "use_item",
-        SoundType.createCustomSoundData(
-            ResourceLocation.fromNamespaceAndPath("example_mod", "use_item"),
-            1.0f,
-            1.0f
-        )
-    );
-}</pre><h3>Sound Events</h3><p>Sound events позволяют привязать звук к событию игры.</p><pre><button class="copy">Copy</button>// src/main/java/com/example/mod/sound/ModSounds.java
-&#64;SubscribeEvent
-public static void registerSoundEvents(RegisterSoundEvents event) {
-    // Звук при входе игрока
-    event.register(
-        "player_join",
-        SoundType.createCustomSoundData(
-            ResourceLocation.fromNamespaceAndPath("example_mod", "player_join"),
-            1.0f,
-            1.0f
-        )
-    );
-    
-    // Звук при смерти моба
-    event.register(
-        "mob_death",
-        SoundType.createCustomSoundData(
-            ResourceLocation.fromNamespaceAndPath("example_mod", "mob_death"),
-            1.0f,
-            1.0f
-        )
-    );
-}</pre><h3>Sound Event Bus</h3><p>Sound event bus позволяет слушать и отправлять sound events.</p><pre><button class="copy">Copy</button>// src/main/java/com/example/mod/sound/ModSounds.java
-&#64;SubscribeEvent
-public static void onPlayerJoin(PlayerEvent.PlayerLoggedInEvent event) {
-    Player player = event.getEntity();
-    
-    // Отправка sound event
-    SoundEvent soundEvent = SoundEvents.example_mod.player_join;
-    player.playSound(soundEvent);
-}</pre><h3>Sound Type</h3><p>Создание кастомных sound types.</p><pre><button class="copy">Copy</button>// src/main/java/com/example/mod/sound/ExampleSoundType.java
-public record ExampleSoundType(
-    SoundAttributes attributes,
-    SoundData soundData
-) implements SoundType {
-    public static final Supplier&lt;SoundType&gt;
-        EXAMPLE_SOUND_TYPE = new ExampleSoundType(
-            SoundAttributes.getGeneric(),
-            SoundData.createCustomSoundData(
-                ResourceLocation.fromNamespaceAndPath("example_mod", "sound"),
-                1.0f,
-                1.0f
-            )
-        );
-}</pre><h3>Sound Data</h3><p>Звуковые данные для кастомных звуков.</p><pre><button class="copy">Copy</button>// src/main/java/com/example/mod/sound/ExampleSoundData.java
-public record ExampleSoundData(
-    ResourceLocation sound,
-    float volume,
-    float pitch
-) {}
-
-// Создание sound data
-SoundData soundData = SoundData.createCustomSoundData(
-    ResourceLocation.fromNamespaceAndPath("example_mod", "custom_sound"),
-    1.0f,
-    1.0f
-);</pre></section>
 <section id="events"><h2>10. События и «процедуры»</h2><div class="callout"><b>📍 Где создавать метод:</b> например, <code>event/ModEvents.java</code>. Метод с <code>&#64;SubscribeEvent</code> создаёте вы, а NeoForge вызывает его при наступлении события. Для обычной процедуры без события метод можно написать в нужном gameplay-классе и вызвать напрямую.</div><p>Если под «процедурами» имеются в виду MCreator-подобные процедуры, в чистом NeoForge отдельной системы с таким названием нет. Аналог — обычные Java-методы, вызываемые из событий, tick-методов, callbacks, команд и network handlers.</p><table><tr><th>Задача</th><th>Типичный механизм</th></tr><tr><td>Регистрация объектов</td><td>Mod Event Bus + DeferredRegister</td></tr><tr><td>Реакция на игровой момент</td><td>Game Event Bus / <code>&#64;SubscribeEvent</code></td></tr><tr><td>Клиентская настройка</td><td>Client events / client mod bus</td></tr><tr><td>Периодическая логика</td><td>ServerTickEvent / LevelTickEvent / BlockEntity ticker</td></tr><tr><td>Ввод игрока</td><td>Key Mapping + client input event</td></tr><tr><td>Изменение мира</td><td>Server-side event или прямой API Minecraft</td></tr><tr><td>Связь client↔server</td><td>Custom Packet Payload</td></tr></table><pre><button class="copy">Copy</button>&#64;SubscribeEvent
 public static void onPlayerJoin(PlayerEvent.PlayerLoggedInEvent event) {
     Player player = event.getEntity();
     player.sendSystemMessage(Component.literal("Добро пожаловать!"));
 }</pre><div class="callout warn"><b>Два event bus:</b> mod event bus используется для lifecycle/регистрационных событий; NeoForge game event bus — для игровых событий. Неправильная шина часто является причиной «метод не вызывается».</div></section>
+
 <section id="network"><h2>11. Networking</h2><div class="callout"><b>📍 Где создавать:</b> payload — например <code>network/payload/OpenMachinePayload.java</code>; регистрация — <code>network/ModNetworking.java</code>; обработчик — отдельный метод, который получает payload. Так структура пакета не смешивается с игровой логикой.</div><p>В 1.21.1 современный подход — custom payloads и <code>RegisterPayloadHandlersEvent</code>. Сначала определяют payload, его codec/stream codec, затем регистрируют обработчик.</p><pre><button class="copy">Copy</button>public record OpenMachinePayload(BlockPos pos)
         implements CustomPacketPayload {
     public static final Type<OpenMachinePayload> TYPE =
@@ -506,6 +356,8 @@ public static void onPlayerJoin(PlayerEvent.PlayerLoggedInEvent event) {
 
     &#64;Override public Type<? extends CustomPacketPayload> type() { return TYPE; }
 }</pre><p>Никогда не доверяйте данным от клиента: packet handler должен проверять игрока, позицию, расстояние, состояние мира и права.</p><p><a class="ext" href="https://docs.neoforged.net/docs/1.21.1/networking/">Networking ↗</a></p></section>
+<section id="network-details"><h2>11.1. Client → Server, Server → Client и безопасность</h2><p>Разделяйте направления payload на уровне архитектуры. Client → Server сообщает намерение игрока; Server → Client сообщает результат или визуальное состояние. Сервер остаётся источником истины для изменения мира.</p><table><tr><th>Направление</th><th>Типичный пример</th></tr><tr><td>Client → Server</td><td>Кнопка GUI, клавиша, способность, ввод текста</td></tr><tr><td>Server → Client</td><td>Прогресс, UI-состояние, визуальный эффект</td></tr><tr><td>Оба направления</td><td>Синхронизация состояния, принадлежащего серверу</td></tr></table><h3>Проверки handler</h3><ul><li>Кто отправил payload?</li><li>Есть ли право на действие?</li><li>Достаточно ли близко игрок находится к объекту?</li><li>Существует ли объект и находится ли он в нужном состоянии?</li><li>Валидны ли числа, enum, позиции и идентификаторы?</li><li>Не даёт ли payload доступ к произвольной позиции или предмету?</li></ul><pre><button class="copy">Copy</button>// Схема проверки на сервере&#10;if (!playerHasPermission) return;&#10;if (!level.hasChunkAt(pos)) return;&#10;if (player.distanceToSqr(pos.getX(), pos.getY(), pos.getZ()) &gt; 64) return;&#10;// только после проверок изменяем состояние</pre><div class="callout warn"><b>Главное правило:</b> Screen сообщает намерение. Сервер решает, допустимо ли действие.</div></section>
+
 <section id="data"><h2>12. Данные и attachments</h2><p>Data Attachments позволяют прикреплять дополнительные данные к поддерживаемым holder-объектам, включая entities, chunks и block entities. Для ItemStack в 1.21.1 следует использовать vanilla Data Components.</p><pre><button class="copy">Copy</button>public static final DeferredRegister<AttachmentType<?>> ATTACHMENTS =
     DeferredRegister.create(NeoForgeRegistries.ATTACHMENT_TYPES, MOD_ID);
 
@@ -515,6 +367,7 @@ public static final Supplier<AttachmentType<Integer>> MANA =
 
 // player.getData(MANA)
 // player.setData(MANA, player.getData(MANA) + 10)</pre><p>Если данные должны синхронизироваться клиенту, attachment сам по себе не заменяет network sync: отправляйте необходимые данные клиенту.</p><p><a class="ext" href="https://docs.neoforged.net/docs/1.21.1/datastorage/attachments/">Data Attachments ↗</a></p></section>
+
 <section id="cap"><h2>13. Capabilities</h2><p>Capability — контракт «что объект умеет», отделённый от конкретной реализации. Типичные примеры: item handler, energy/resource handlers. В 1.21.1 providers регистрируются через <code>RegisterCapabilitiesEvent</code>.</p><pre><button class="copy">Copy</button>&#64;SubscribeEvent
 public static void registerCapabilities(RegisterCapabilitiesEvent event) {
     event.registerBlockEntity(
@@ -523,6 +376,7 @@ public static void registerCapabilities(RegisterCapabilitiesEvent event) {
         (be, side) -> be.getItemHandler(side)
     );
 }</pre><p>Если capability provider меняет возвращаемый объект/состояние и ранее выданные значения кэшировались, нужно корректно инвалидировать capability cache.</p><p><a class="ext" href="https://docs.neoforged.net/docs/1.21.1/inventories/capabilities/">Capabilities ↗</a></p></section>
+
 <section id="commands"><h2>14. Команды</h2><p>Команды регистрируются через событие команд. Brigadier отвечает за parsing, suggestions, permissions и execution.</p><pre><button class="copy">Copy</button>&#64;SubscribeEvent
 public static void registerCommands(RegisterCommandsEvent event) {
     event.getDispatcher().register(
@@ -536,25 +390,7 @@ public static void registerCommands(RegisterCommandsEvent event) {
                 }))
     );
 }</pre></section>
-<h3>Permissions</h3><p>Команды могут требовать разрешения через <code>requires()</code>.</p><pre><button class="copy">Copy</button>// Требование разрешения
-Commands.literal("admin")
-    .requires(src -> src.hasPermission(2))  // OP
-    .then(...)
 
-// Или с custom permission
-Commands.literal("mod")
-    .requires(src -> src.hasPermission(ModPermissions.MOD_COMMAND))
-    .then(...)</pre><h3>Command Arguments</h3><p>Создание аргументов команд.</p><pre><button class="copy">Copy</button>// String argument
-Commands.literal("create")
-    .then(Commands.argument("name", StringArgumentType.gatheredCentered(
-        ctx -> Component.literal("Name: ") + ctx.getArgument("name", String.class)
-    )))
-
-// Integer argument
-Commands.literal("set")
-    .then(Commands.argument("value", IntArgParser.intArg(
-        ctx -> Component.literal("Value: ") + ctx.getArgument("value", int.class).toString()
-    )))</pre></section>
 <section id="resources"><h2>15. JSON и ресурсы</h2><table><tr><th>Путь</th><th>Назначение</th></tr><tr><td><code>assets/modid/lang/</code></td><td>Переводы</td></tr><tr><td><code>assets/modid/models/item/</code></td><td>Item models</td></tr><tr><td><code>assets/modid/blockstates/</code></td><td>Blockstate → model</td></tr><tr><td><code>assets/modid/models/block/</code></td><td>Block models</td></tr><tr><td><code>assets/modid/textures/</code></td><td>Текстуры</td></tr><tr><td><code>data/modid/recipes/</code></td><td>Рецепты</td></tr><tr><td><code>data/modid/loot_tables/</code></td><td>Loot tables</td></tr><tr><td><code>data/modid/tags/</code></td><td>Tags</td></tr></table><h3>Пример item model</h3><pre><button class="copy">Copy</button>{
   "parent": "minecraft:item/generated",
   "textures": { "layer0": "examplemod:item/ruby" }
@@ -562,6 +398,7 @@ Commands.literal("set")
   "item.examplemod.ruby": "Ruby",
   "block.examplemod.ruby_block": "Ruby Block"
 }</pre></section>
+
 <section id="datagen"><h2>16. Data Generation</h2><p>Datagen позволяет генерировать повторяющиеся JSON-ресурсы из Java: recipes, loot, tags, models, language и particle descriptions. Это особенно полезно, когда у мода десятки однотипных предметов/блоков.</p><pre><button class="copy">Copy</button>public class ModDataGenerators {
     public static void gather(GatherDataEvent event) {
         PackOutput output = event.getGenerator().getPackOutput();
@@ -572,267 +409,82 @@ Commands.literal("set")
         event.addProvider(true, new ModLanguageProvider(output, "en_us", ...));
     }
 }</pre><p>После изменения генератора запускайте Gradle task, связанный с data generation, и проверяйте generated resources в output-папках проекта.</p><p><a class="ext" href="https://docs.neoforged.net/docs/1.21.1/resources/client/particles/">Particle datagen example ↗</a></p></section>
+
 <section id="recipes"><h2>17. Recipes / Loot / Tags</h2><div class="grid"><div class="card"><h3>Recipes</h3><p>Определяют способы получения предметов/результатов. Для нестандартной логики создают custom recipe type/serializer, обычно с codec.</p></div><div class="card"><h3>Loot</h3><p>Loot tables управляют drops. Для особого поведения можно использовать custom loot objects, но сначала проверьте, достаточно ли vanilla conditions/functions.</p></div><div class="card"><h3>Tags</h3><p>Tags позволяют обращаться к группе блоков, предметов, сущностей и т. п. без жёсткой привязки к конкретным ID.</p></div></div><p><a class="ext" href="https://docs.neoforged.net/docs/1.21.1/resources/server/loottables/custom/">Custom Loot Objects ↗</a></p></section>
+<section id="data-resources"><h2>17.1. Enchantments, Data Maps и Data Load Conditions</h2><h3>Enchantments</h3><p>Зачарования относятся к datapack registry и используют JSON + registry holders. Для собственных предметов важны enchantable tags.</p><h3>Data Maps</h3><p>Data Maps связывают registry object с дополнительными данными. В отличие от простого тега, data map может хранить структуру и перезагружаться через <code>/reload</code>. Это полезно для data-driven настроек большого набора объектов.</p><h3>Data Load Conditions</h3><p>NeoForge позволяет большинству JSON-файлов использовать <code>neoforge:conditions</code>, чтобы загружать данные только при выполнении условия, например если другой mod присутствует.</p><pre><button class="copy">Copy</button>{&#10;  "neoforge:conditions": [&#10;    {"type": "neoforge:mod_loaded", "modid": "examplemod"}&#10;  ],&#10;  "type": "minecraft:crafting_shaped"&#10;}</pre><table><tr><th>Задача</th><th>Механизм</th></tr><tr><td>Группа объектов</td><td>Tag</td></tr><tr><td>Registry object → дополнительные данные</td><td>Data Map</td></tr><tr><td>ItemStack → состояние предмета</td><td>Data Component</td></tr><tr><td>Условная загрузка JSON</td><td>Data Load Condition</td></tr><tr><td>Получение предмета</td><td>Recipe / Loot Table</td></tr></table></section>
+
 <section id="client"><h2>18. Клиентская часть</h2><p>Клиентский код включает renderers, screens, particle providers, key mappings, HUD и визуальные эффекты. Архитектурно держите client-only классы в отдельном пакете и регистрируйте их только в клиентском lifecycle/event.</p><div class="callout warn">Если common-класс напрямую ссылается на <code>net.minecraft.client.*</code>, dedicated server может упасть ещё при загрузке класса. Разделяйте common/client.</div><pre><button class="copy">Copy</button>public final class ClientModEvents {
     public static void registerScreens(RegisterMenuScreensEvent event) {
         event.register(ModMenus.MACHINE.get(), MachineScreen::new);
     }
 }</pre></section>
+<section id="client-rendering"><h2>18.1. Rendering</h2><p>Рендеринг лучше отделять от игровой логики. Entity/BlockEntity знают, что происходит; renderer решает, как это выглядит на клиенте.</p><h3>Типичные client-only части</h3><ul><li>EntityRenderer и модель сущности.</li><li>BlockEntityRenderer.</li><li>Screen и widgets.</li><li>Particle provider.</li><li>HUD и overlays.</li><li>Model layer registration.</li></ul><h3>Если объект невидим</h3><ol><li>Проверьте registry ID.</li><li>Проверьте регистрацию renderer на клиенте.</li><li>Проверьте model layer/модель.</li><li>Проверьте texture path в <code>assets/modid/textures/...</code>.</li><li>Убедитесь, что client-only класс не попал в common код.</li><li>Посмотрите client log на missing texture/model.</li></ol><div class="callout">Для Screen используется <code>GuiGraphics</code>; для Entity — renderer/model pipeline. Не смешивайте их координатные системы и жизненные циклы.</div></section>
+
 <section id="debug"><h2>19. Debug & тестирование</h2><ol><li>Запустите <code>runClient</code> и проверяйте логи.</li><li>Проверьте registry names и namespace.</li><li>Проверьте assets/data пути.</li><li>Проверьте client/server side.</li><li>Проверьте dedicated server.</li><li>При networking проверяйте оба направления и валидируйте input.</li><li>Используйте IDE для перехода в исходники Minecraft/NeoForge.</li></ol><div class="callout"><b>Типовые симптомы:</b> предмет есть в registry, но розовый — проблема resource/model/texture; GUI открывается только локально — забыта server/client синхронизация; dedicated server падает — client-only class загружен на сервере; capability не работает после замены handler — нужна инвалидизация.</div></section>
+
 <section id="patterns"><h2>20. Рецепты архитектуры</h2><table><tr><th>Хочу сделать</th><th>С чего начать</th></tr><tr><td>Меч/инструмент</td><td>Item + свойства + custom class при необходимости</td></tr><tr><td>Машина с инвентарём</td><td>Block + BlockEntity + IItemHandler capability + Menu + Screen</td></tr><tr><td>Энергия</td><td>BlockEntity + соответствующий resource capability + sync</td></tr><tr><td>Моб</td><td>Entity + EntityType + attributes/AI + renderer + spawn rules</td></tr><tr><td>Снаряд</td><td>Entity + EntityType + movement/collision + renderer</td></tr><tr><td>Особый визуальный эффект</td><td>ParticleType + provider + texture/particle class</td></tr><tr><td>Кнопка/клавиша</td><td>Client key mapping + input event + packet на сервер</td></tr><tr><td>Состояние игрока</td><td>Attachment + serialization + server/client sync</td></tr><tr><td>Изменение vanilla объекта</td><td>Event / tag / datapack-style resource / mixin только если API недостаточен</td></tr><tr><td>Сложный экран</td><td>Menu + Screen + slots/data slots + custom payload при сложной синхронизации</td></tr></table></section>
-<section id="mixin"><h2>21. Модификации vanilla через Mixin</h2><div class="callout warn"><b>Важно:</b> Mixin — это инструмент для расширения классов, а не замены их поведения. Неправильное использование может привести к конфликтам и непредсказуемым результатам.</div><p>Mixin позволяет добавлять методы в существующие классы Minecraft/NeoForge без наследования. Это полезно для расширения функциональности с минимальным вмешательством в оригинальный код.</p><h3>Как использовать Mixin</h3><ol><li>Создайте файл <code>src/main/java/com/example/mod/mixin/ExampleMixin.java</code></li><li>Укажите класс-мишень и метод для расширения</li><li>Реализуйте методы, которые будут вызываться в точке расширения</li><li>Регистрируйте Mixin через <code>MixinTransformerConfig</code></li></ol><h3>Пример Mixin</h3><pre><button class="copy">Copy</button>&#64;Mixin(Block.class)
-&#64;RequiredArgsConstructor
-public class ExampleBlockMixin {
-    private final Block block;
+<section id="recipes-cookbook"><h2>20.1. Практические рецепты</h2><p>Это не отдельный tutorial, а набор коротких архитектурных схем для использования как чек-лист.</p><div class="grid"><div class="card"><h3>Предмет со способностью</h3><p><code>Item</code> → <code>use</code>/<code>useOn</code> → серверная проверка → изменение мира → client effect.</p></div><div class="card"><h3>Зачарованный предмет</h3><p><code>Item</code> → enchantable tag → enchantment JSON → чтение component → gameplay effect.</p></div><div class="card"><h3>Машина</h3><p><code>Block</code> → <code>BlockEntity</code> → <code>IItemHandler</code> → recipe lookup → <code>Menu</code> → <code>Screen</code> → sync.</p></div><div class="card"><h3>GUI с кнопкой</h3><p><code>Screen</code> → Button → payload → Server validation → state change → sync.</p></div><div class="card"><h3>Снаряд</h3><p><code>EntityType</code> → projectile → movement/collision → damage/effect → renderer.</p></div><div class="card"><h3>Состояние игрока</h3><p>Attachment → serialization → server authority → client sync → UI/HUD.</p></div><div class="card"><h3>Особый BlockState</h3><p>Property → state definition → interaction/update → blockstate JSON → model variants. Если состояние не укладывается в конечный набор — BlockEntity.</p></div><div class="card"><h3>Данные мира</h3><p>SavedData → load/save → world-level ownership.</p></div></div><h3>Мини-чеклист перед commit</h3><ol><li>Registry entry существует.</li><li>Common/client логика разделена.</li><li>Нужные данные сохраняются.</li><li>Клиент получает нужную синхронизацию.</li><li>Client → Server payloads валидируются.</li><li>Assets/data JSON присутствуют.</li><li>Проверен dedicated server.</li><li>Mixin не заменяет уже существующий event/API.</li></ol></section>
 
-    &#64;Inject(at = &#64;At("TAIL"), remap = false)
-    public void onBlockPlaced(BlockPlacementEvent event) {
-        // Расширяем логику при размещении блока
-        if (event.getState().hasProperty("custom", Boolean.class)) {
-            // кастомная логика
-        }
-    }
-}</pre><h3>Регистрация Mixin</h3><p>Mixin трансформаторы должны быть зарегистрированы через <code>MixinTransformerConfig</code>.</p><pre><button class="copy">Copy</button># src/main/resources/META-INF/neoforge.mixins.json
-{
-    "transformers": [
-        {
-            "remapInput": true,
-            "config": "example.mixins.json"
-        }
-    ]
-}
-
-# src/main/resources/example.mixins.json
-[
-    {
-        "from": ["net.minecraft.block.Block"],
-        "method": "placeItemInWorld",
-        "at": [
-            {
-                "type": "INVOKE",
-                "target": "com.example.mod.mixin.ExampleBlockMixin::onBlockPlaced"
-            }
-        ]
-    }
-]</pre><h3>Когда использовать Mixin</h3><div class="grid"><div class="card"><b>Использовать Mixin:</b>
-<ul><li>Расширение существующего API без наследования</li><li>Минимальное вмешательство в оригинальный код</li><li>Адаптация к изменениям в Minecraft/NeoForge</li></ul></div><div class="card"><b>Не использовать Mixin:</b>
-<ul><li>Замена основного поведения (лучше наследование)</li><li>Сложная логика с состоянием (лучше собственный класс)</li><li>Когда нужно полное переопределение метода</li></ul></div></div><h3>Пример: расширение BlockItem</h3><pre><button class="copy">Copy</button>&#64;Mixin(BlockItem.class)
-&#64;RequiredArgsConstructor
-public class ExampleBlockItemMixin {
-    private final BlockItem blockItem;
-
-    &#64;Inject(at = "&#64;RETURN", remap = false)
-    public void onRightClick(BlockHitResult hit) {
-        // Расширяем логику при правом клике
-        if (hit.getBlockState().hasProperty("custom_action")) {
-            // кастомное действие
-        }
-    }
-}</pre><h3>Безопасность Mixin</h3><div class="callout warn"><b>Правила безопасности:</b>
-<ul><li>Используйте <code>&#64;At("TAIL")</code> для расширения после основного кода</li><li>Избегайте конфликтов с существующими &#64;Inject методами</li><li>Проверяйте версии Minecraft/NeoForge при регистрации</li><li>Не используйте Mixin для критических систем (спавн, AI)</li></ul></div><p>Для получения актуальной информации о Mixin API и конфигурации смотрите официальную документацию NeoForge.</p></section>
-<section id="data-components"><h2>21.2. Data Components & Component API</h2><p>Data Components — это современный подход к хранению данных в Minecraft, который заменяет/дополняет Attachments для ItemStack и других holder-объектов.</p><div class="callout ok"><b>Преимущества:</b>
-<ul><li>Типизированные данные через <code>Component</code></li><li>Удобная сериализация через JSON/CompoundTag</li><li>Более гибкая работа с данными</li></ul></div><h3>Основные типы Component</h3><pre><button class="copy">Copy</button>// Для ItemStack
-ItemStack stack = new ItemStack(ModItems.RUBY.get());
-Component component = Component.empty();
-stack.set(DataComponents.MANA, 100); // установка значения
-int mana = stack.get(DataComponents.MANA); // получение значения
-
-// Для Entity
-Entity entity = player;
-entity.setData(ModAttachments.MANA, 100);
-int mana = entity.getData(ModAttachments.MANA);
-
-// Для BlockEntity
-BlockEntity be = level.getBlockEntity(pos);
-be.setData(ModAttachments.PROGRESS, 50);
-</pre><h3>Создание кастомных Component</h3><pre><button class="copy">Copy</button>// src/main/java/com/example/mod/data/ManaComponent.java
-public record ManaComponent(int value) implements DataComponent {
-    public static final AttachmentType&lt;Integer&gt; TYPE =
-        AttachmentType.builder(() -> 0)
-            .serialize(Codec.INT)
-            .build();
-}
-
-// Использование
-ItemStack stack = new ItemStack(ModItems.RUBY.get());
-stack.set(DataComponents.MANA, 100);
-Component component = Component.empty()
-    .append(DataComponents.MANA, 100);
-</pre><h3>Serialization & Deserialization</h3><p>Data Components автоматически сериализуются в JSON/CompoundTag при сохранении.</p><pre><button class="copy">Copy</button>// Пример сохранения и загрузки
-public class MachineBlockEntity extends BlockEntity {
-    private int progress;
-
-    public MachineBlockEntity(BlockPos pos, BlockState state) {
-        super(ModBlockEntities.MACHINE.get(), pos, state);
-    }
-
-    &#64;Override protected void readAdditionalSaveData(CompoundTag tag) {
-        super.readAdditionalSaveData(tag);
-        progress = tag.getInt("progress");
-    }
-
-    &#64;Override protected void addAdditionalSaveData(CompoundTag tag) {
-        super.addAdditionalSaveData(tag);
-        tag.putInt("progress", progress);
-    }
-}</pre><h3>Component vs String</h3><div class="grid"><div class="card"><b>Использовать Component:</b>
-<ul><li>Когда нужны типы данных (int, boolean, List&lt;String&gt;)</li><li>Для сериализации в JSON/CompoundTag</li><li>При работе с Data Attachments</li></ul></div><div class="card"><b>Использовать String:</b>
-<ul><li>Для простых флагов (enabled, locked)</li><li>Когда данные не требуют типизации</li><li>В конфигурационных файлах</li></ul></div></div><p>Для ItemStack в NeoForge 1.21.1 предпочтительнее использовать Data Components через <code>DataComponents.MANA</code>, чем кастомные Attachments.</p></section>
-<section id="world-gen"><h2>21.3. World Generation</h2><div class="callout ok"><b>Что можно генерировать:</b>
-<ul><li>New Biome — создание новых биомов с уникальной атмосферой</li><li>New Structure — новые структуры (дома, башни, пещеры)</li><li>Biome Modifier — изменение существующих биомов</li><li>Decoration — добавление декораций в существующие биомы</li></ul></div><h3>New Biome</h3><pre><button class="copy">Copy</button>// src/main/java/com/example/mod/worldgen/ExampleBiome.java
-public record ExampleBiome(
-    String name,
-    BiomeGenerationSettings settings,
-    BiomeBorderSettings borderSettings
-) {
-    public static final Supplier&lt;BiomeDefinition&lt;&gt;&gt;
-        EXAMPLE_BIOME = BiomeGenerator.create("example_biome", () -> new ExampleBiome(
-            "example_biome",
-            new BiomeGenerationSettings.Builder()
-                .temperature(0.5f)
-                .humidity(0.3f)
-                .build(),
-            new BiomeBorderSettings.Builder()
-                .borderType(BorderType.OCEAN)
-                .build()
-        ));
-}</pre><h3>New Structure</h3><pre><button class="copy">Copy</button>// src/main/java/com/example/mod/worldgen/ExampleStructure.java
-public record ExampleStructure(
-    String name,
-    StructureSettings settings,
-    StructurePiece[] pieces
-) {
-    public static final Supplier&lt;StructureDefinition&lt;&gt;&gt;
-        EXAMPLE_STRUCTURE = StructureGenerator.create("example_structure", () -> new ExampleStructure(
-            "example_structure",
-            new StructureSettings.Builder()
-                .biomeFilter(BiomeFilter.BLOCK_MATCH)
-                .build(),
-            new StructurePiece[] {
-                new StructurePiece(new ResourceLocation("example_mod", "base"), 0, 10, 10, 10, true, false, false, false),
-                new StructurePiece(new ResourceLocation("example_mod", "tower"), 5, 20, 30, 40, true, false, false, false)
-            }
-        ));
-}</pre><h3>Biome Modifier</h3><pre><button class="copy">Copy</button>// src/main/java/com/example/mod/worldgen/ExampleModifier.java
-public record ExampleModifier(
-    String name,
-    BiomeModifierSettings settings
-) {
-    public static final Supplier&lt;BiomeModifierDefinition&lt;&gt;&gt;
-        EXAMPLE_MODIFIER = BiomeModifierGenerator.create("example_modifier", () -> new ExampleModifier(
-            "example_modifier",
-            new BiomeModifierSettings.Builder()
-                .addFeature(new FeatureConfigurator() {
-                    &#64;Override
-                    public void configure(FeatureConfigurationBuilder builder) {
-                        builder.setPlacedState(BlockStates.STONE);
-                    }
-                }, 0.1f))
-        ));
-}</pre><h3>Decoration</h3><pre><button class="copy">Copy</button>// src/main/java/com/example/mod/worldgen/ExampleDecoration.java
-public record ExampleDecoration(
-    String name,
-    DecorationSettings settings
-) {
-    public static final Supplier&lt;DecorationDefinition&lt;&gt;&gt;
-        EXAMPLE_DECORATION = DecorationGenerator.create("example_decoration", () -> new ExampleDecoration(
-            "example_decoration",
-            new DecorationSettings.Builder()
-                .setPlacedState(BlockStates.GRASS_BLOCK)
-                .build()
-        ));
-}</pre><h3>Генерация через Datagen</h3><pre><button class="copy">Copy</button>// src/main/java/com/example/mod/data/ModDataGenerators.java
-public class ModDataGenerators {
-    public static void gather(GatherDataEvent event) {
-        PackOutput output = event.getGenerator().getPackOutput();
-        ExistingFileHelper helper = event.getExistingFileHelper();
-
-        // Генерация биомов
-        event.addProvider(true, new ModBiomeProvider(output));
-        
-        // Генерация структур
-        event.addProvider(true, new ModStructureProvider(output));
-        
-        // Генерация декораций
-        event.addProvider(true, new ModDecorationProvider(output));
-    }
-}</pre><h3>Пример: новый биом</h3><pre><button class="copy">Copy</button>// assets/example_mod/worldgen/biome/example_biome.json
-{
-  "temperature": 0.5,
-  "humidity": 0.3,
-  "downfall": 0.1,
-  "waterLevel": 0,
-  "fogDensity": 0.2,
-  "snowSurfaceHeight": -64,
-  "snowDepth": 0,
-  "hasRainingSkylight": false,
-  "hasSnowySkylight": false,
-  "skyColor": {"rgbi": [135, 206, 235, 255]},
-  "sunColor": {"rgbi": [253, 253, 253, 255]},
-  "moonColor": {"rgbi": [194, 229, 250, 255]},
-  "carpetColor": {"rgbi": [76, 118, 129, 255]}
-}</pre><h3>Пример: новая структура</h3><pre><button class="copy">Copy</button>// assets/example_mod/worldgen/structure/example_structure.json
-{
-  "type": "minecraft:structure",
-  "generator": {
-    "type": "minecraft:simple",
-    "projection": "minecraft:minimal"
-  },
-  "pools": [
-    {
-      "size": {"min": 1, "max": 1},
-      "spacing": 0,
-      "separation": 0
-    }
+<section id="mixin"><h2>21. Модификации vanilla через Mixin</h2><div class="callout warn"><b>Важно для NeoForge 1.21.1:</b> Mixin — низкоуровневый инструмент трансформации классов. Сначала ищите обычный NeoForge event, API, registry, tag или datapack-механизм; Mixin используйте, когда доступного extension point действительно недостаточно.</div><h3>Как подключается Mixin</h3><p>В NeoForge 1.21.1 конфигурация Mixin указывается в <code>src/main/resources/META-INF/neoforge.mods.toml</code> через таблицу <code>[[mixins]]</code>. Сам mixin-конфиг обычно лежит в <code>src/main/resources/</code>. Не используйте схему с <code>MixinTransformerConfig</code> и ключом <code>transformers</code> из старого/чужого примера.</p><pre><button class="copy">Copy</button>[[mixins]]
+config="examplemod.mixins.json"</pre><pre><button class="copy">Copy</button>{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "com.examplemod.mixin",
+  "compatibilityLevel": "JAVA_21",
+  "mixins": [
+    "EntityMixin"
   ],
-  "biomeFilter": {
-    "type": "minecraft:block_match",
-    "blockState": {
-      "Name": "example_mod:stone_block"
-    }
-  },
-  "structures": [
-    {
-      "structure": "example_mod:tower",
-      "weight": 100
-    }
-  ]
-}</pre><h3>Пример: структура башни</h3><pre><button class="copy">Copy</button>// assets/example_mod/worldgen/structure/tower.json
-{
-  "type": "minecraft:structure",
-  "generator": {
-    "type": "minecraft:simple",
-    "projection": "minecraft:minimal"
-  },
-  "pools": [
-    {
-      "size": {"min": 1, "max": 1},
-      "spacing": 0,
-      "separation": 0
-    }
-  ],
-  "biomeFilter": {
-    "type": "minecraft:always"
-  },
-  "structures": [
-    {
-      "structure": "example_mod:tower_piece",
-      "weight": 100,
-      "transformations": [
-        {
-          "type": "minecraft:rotation",
-          "angle": 90
-        }
-      ]
-    }
-  ]
-}</pre><h3>Пример: декорация</h3><pre><button class="copy">Copy</button>// assets/example_mod/worldgen/decoration/example_decoration.json
-{
-  "type": "minecraft:decoration",
-  "settings": {
-    "placedState": {"Name": "example_mod:stone_block"}
+  "injectors": {
+    "defaultRequire": 1
   }
-}</pre></section>
+}</pre><h3>Минимальный рабочий учебный пример</h3><p>Для демонстрации возьмём <code>Entity#tick()</code>: это проще сверить с mappings, чем придумывать сигнатуру сложного игрового callback. Внутри injection используется стандартный <code>CallbackInfo</code>.</p><pre><button class="copy">Copy</button>&#64;Mixin(Entity.class)
+public abstract class EntityMixin {
+    &#64;Inject(method = "tick", at = &#64;At("TAIL"))
+    private void example$afterTick(CallbackInfo ci) {
+        // Собственная логика после Entity#tick().
+    }
+}</pre><div class="callout"><b>Где файл:</b> <code>src/main/java/com/examplemod/mixin/EntityMixin.java</code>. <b>Где подключение:</b> <code>src/main/resources/examplemod.mixins.json</code> + <code>[[mixins]]</code> в <code>neoforge.mods.toml</code>. <b>Где метод:</b> <code>example$afterTick(...)</code> — ваш метод, который Mixin вызывает в указанной точке.</div><h3>Как выбирать &#64;At</h3><ul><li><code>HEAD</code> — в начале метода.</li><li><code>TAIL</code> — в конце метода; это не «правило безопасности», а конкретная точка injection.</li><li><code>INVOKE</code> — около вызова другого метода; требует точного target/descriptor.</li><li><code>RETURN</code> — перед возвратом результата; для возвращаемого значения часто нужен <code>CallbackInfoReturnable&lt;T&gt;</code>.</li></ul><h3>Типовые ошибки</h3><ul><li>Сигнатура injection не соответствует target-методу.</li><li>Mixin направлен на неправильный класс или имя метода из другой версии mappings.</li><li>Использован <code>remap=false</code> без необходимости.</li><li>Конфигурация взята от Forge/Fabric/другой версии и не соответствует NeoForge 1.21.1.</li><li>Mixin пытается решить задачу, которую проще решить event/API.</li></ul><div class="callout warn"><b>Проверка версии:</b> при переносе на новые NeoForge 1.21.x сверяйте target-класс, имя метода, descriptor и конфигурацию с mappings именно вашей версии. Например, более новые docs могут содержать дополнительные параметры <code>[[mixins]]</code>; это не означает, что они нужны 1.21.1.</div></section>
+
+<section id="components"><h2>21.2. Data Components & Component API</h2><div class="callout ok"><b>Для NeoForge 1.21.1:</b> Data Components — прежде всего система данных <code>ItemStack</code>. Ключом является <code>DataComponentType&lt;T&gt;</code>, а значение должно быть подходящим типом данных. Для собственного компонента регистрируется собственный <code>DataComponentType</code>.</div><h3>Использование vanilla component</h3><pre><button class="copy">Copy</button>ItemStack stack = new ItemStack(ModItems.RUBY.get());
+stack.set(DataComponents.CUSTOM_NAME, Component.literal("Ruby"));
+Component name = stack.get(DataComponents.CUSTOM_NAME);</pre><h3>Собственный component</h3><pre><button class="copy">Copy</button>public record Mana(int value) {
+    public static final Codec&lt;Mana&gt; CODEC =
+        RecordCodecBuilder.create(instance -&gt; instance.group(
+            Codec.INT.fieldOf("value").forGetter(Mana::value)
+        ).apply(instance, Mana::new));
+}
+
+public static final DeferredRegister.DataComponents COMPONENTS =
+    DeferredRegister.createDataComponents(Registries.DATA_COMPONENT_TYPE, MOD_ID);
+
+public static final Supplier&lt;DataComponentType&lt;Mana&gt;&gt; MANA =
+    COMPONENTS.registerComponentType(
+        "mana",
+        builder -&gt; builder.persistent(Mana.CODEC)
+    );</pre><p>Если компонент должен передаваться по сети, добавьте подходящий <code>networkSynchronized(StreamCodec)</code>. Значения компонентов следует рассматривать как immutable: после изменения значения записывайте новое значение через <code>set</code>/<code>update</code>.</p><pre><button class="copy">Copy</button>ItemStack stack = new ItemStack(ModItems.RUBY.get());
+stack.set(MANA.get(), new Mana(100));
+Mana mana = stack.getOrDefault(MANA.get(), new Mana(0));</pre><div class="callout warn"><b>Не путать:</b> <code>Component</code> из текста Minecraft — это text component, например <code>Component.literal(...)</code>. <code>DataComponentType&lt;T&gt;</code> — тип ключа data component. <code>AttachmentType&lt;T&gt;</code> — отдельная система NeoForge для attachments.</div><p>В 1.21.1 не следует писать несуществующий <code>DataComponents.MANA</code> для собственного компонента и не следует объявлять <code>AttachmentType</code> как реализацию Data Component.</p><div class="callout"><b>Отличие новых версий:</b> современные NeoForge docs могут показывать дополнительные helpers и варианты работы с component holders. Для книги baseline остаётся API 1.21.1; при переходе на другую 1.21.x проверяйте сигнатуры регистратора и codec API.</div></section>
+
+<section id="world-gen"><h2>21.3. World Generation</h2><div class="callout warn"><b>Важно:</b> старые псевдо-классы вроде <code>BiomeGenerator</code>, <code>BiomeDefinition</code>, <code>StructureGenerator</code> и <code>DecorationGenerator</code> не являются API NeoForge 1.21.1. Не копируйте такие классы в реальный проект.</div><h3>Datapack registry paths</h3><p>Worldgen-данные используют <code>data/&lt;modid&gt;/worldgen/...</code> для соответствующих Minecraft datapack registries. Biome modifiers NeoForge имеют отдельный путь <code>data/&lt;modid&gt;/neoforge/biome_modifier/...</code>.</p><h3>Biome Modifier: добавить feature</h3><pre><button class="copy">Copy</button>// src/main/resources/data/examplemod/neoforge/biome_modifier/add_feature.json
+{
+  "type": "neoforge:add_features",
+  "biomes": "#minecraft:is_overworld",
+  "features": "examplemod:example_placed_feature",
+  "step": "underground_ores"
+}</pre><p>Biome modifiers могут добавлять/удалять features и spawns и менять ряд параметров биома. Для новых мобов отдельно проверьте <code>RegisterSpawnPlacementsEvent</code>: одного biome modifier недостаточно для корректных spawn restrictions.</p><h3>Datagen</h3><p>Для data-driven worldgen NeoForge 1.21.1 использует <code>RegistrySetBuilder</code> и <code>DatapackBuiltinEntriesProvider</code>. Это принципиально отличается от выдуманного статического API вида <code>BiomeGenerator.create(...)</code>.</p><pre><button class="copy">Copy</button>public static final ResourceKey&lt;BiomeModifier&gt; EXAMPLE =
+    ResourceKey.create(
+        NeoForgeRegistries.Keys.BIOME_MODIFIERS,
+        ResourceLocation.fromNamespaceAndPath(MOD_ID, "example")
+    );
+
+// В DatapackBuiltinEntriesProvider/RegistrySetBuilder:
+builder.add(NeoForgeRegistries.Keys.BIOME_MODIFIERS, bootstrap -&gt; {
+    HolderGetter&lt;Biome&gt; biomes = bootstrap.lookup(Registries.BIOME);
+    // bootstrap.register(EXAMPLE, new ...BiomeModifier(...));
+});</pre><h3>Что с собственным биомом и структурами?</h3><p>В 1.21.1 это не «зарегистрировать Java-класс BiomeDefinition». Используйте соответствующие Minecraft registry/data-driven worldgen механизмы, registry keys, codecs и datapack JSON. Конкретный пример должен соответствовать точному типу worldgen registry, поэтому в этой книге не выдаём псевдо-API за готовый код.</p><div class="callout ok"><b>Правило:</b> если путь начинается с <code>assets/</code>, это обычно client resources. Если речь о datapack/worldgen data, сначала проверяйте путь под <code>data/</code>. Для biome modifiers NeoForge namespace — <code>data/&lt;modid&gt;/neoforge/biome_modifier/</code>.</div><div class="callout"><b>Отличие новых версий:</b> worldgen API и набор datagen helpers меняются между 1.21.x. Если пример найден в docs 1.21.5+ или 1.21.10+, не переносите его в 1.21.1 без сверки типов, codecs и registry keys.</div></section>
+
+<section id="advanced"><h2>21.4. Дополнительные системы</h2><div class="grid"><div class="card"><h3>Configuration</h3><p>В NeoForge 1.21.1 конфигурации строятся вокруг <code>ModConfigSpec</code> и регистрируются через <code>ModContainer#registerConfig</code>. Есть типы STARTUP, CLIENT и COMMON/SERVER в зависимости от конфигурации.</p></div><div class="card"><h3>Global Loot Modifiers</h3><p>GLM позволяют изменять drops без копирования ванильных loot tables. В 1.21.1 используется <code>data/neoforge/loot_modifiers/global_loot_modifiers.json</code> плюс JSON конкретного модификатора в namespace мода.</p></div><div class="card"><h3>GameTest</h3><p>Для автоматической проверки игровой логики полезно выделять тестируемые сценарии: размещение блока, рецепт машины, обработку payload, spawn и т. п. Конкретный harness и annotations сверяйте с MDK 1.21.1.</p></div><div class="card"><h3>SavedData</h3><p>Если данные принадлежат миру/уровню, а не конкретному entity или ItemStack, рассмотрите <code>SavedData</code>. Это другой уровень хранения, чем Data Components и Attachments.</p></div></div><h3>Как выбрать хранилище</h3><table><tr><th>Данные</th><th>Механизм</th></tr><tr><td>Данные конкретного ItemStack</td><td>Data Component</td></tr><tr><td>Дополнительные данные holder-объекта NeoForge</td><td>Data Attachment</td></tr><tr><td>Данные блока с позицией</td><td>BlockEntity</td></tr><tr><td>Данные мира/уровня</td><td>SavedData</td></tr><tr><td>Постоянные настройки мода</td><td>Config</td></tr><tr><td>Изменение drops</td><td>Loot Table / Global Loot Modifier</td></tr></table><div class="callout warn"><b>Учебный статус:</b> этот раздел даёт архитектурную карту, а не утверждает, что каждый показанный здесь API-фрагмент является copy-paste готовым. Для сложных систем сначала сверяйте конкретную страницу 1.21.1 docs и исходники MDK.</div></section>
+
 <section id="cheatsheet"><h2>22. Шпаргалка</h2><pre><button class="copy">Copy</button>// Registry
 DeferredRegister.create(...)
 register(...)
@@ -864,7 +516,7 @@ player.getData(ModAttachments.MANA);
 player.setData(ModAttachments.MANA, 100);</pre><h3>Официальные источники</h3><ul><li><a class="ext" href="https://docs.neoforged.net/docs/1.21.1/">NeoForge 1.21.1 Documentation ↗</a></li><li><a class="ext" href="https://docs.neoforged.net/docs/1.21.1/gettingstarted/">Getting Started ↗</a></li><li><a class="ext" href="https://docs.neoforged.net/docs/1.21.1/networking/">Networking ↗</a></li><li><a class="ext" href="https://docs.neoforged.net/docs/1.21.1/gui/menus/">Menus ↗</a></li><li><a class="ext" href="https://docs.neoforged.net/docs/1.21.1/datastorage/attachments/">Data Attachments ↗</a></li></ul><p class="small">Эта книга намеренно использует 1.21.1 как baseline. При переходе на 1.21.4/1.21.8/1.21.10+ сверяйте сигнатуры и актуальные docs: NeoForge активно меняет API между версиями.</p></section>
 </main></div></div>
 <script>
-function esc(s){return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;')}
+function esc(s){return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/&#64;/g,'&#64;')}
 function highlightJava(s){let x=esc(s);const stash=[];const hold=v=>{const i=stash.push(v)-1;return `§§§${String.fromCharCode(65+i)}§§§`};x=x.replace(/\/\/.*$/gm,m=>hold(`<span class="tok-comment">${m}</span>`));x=x.replace(/("(?:\\.|[^"\\])*"|'(?:\\.|[^'\\])*')/g,m=>hold(`<span class="tok-string">${m}</span>`));x=x.replace(/(&#64;[A-Za-z_$][\w$]*)/g,'<span class="tok-anno">$1</span>');x=x.replace(/\b(public|private|protected|static|final|class|interface|extends|implements|new|return|if|else|for|while|void|this|super|true|false|null|package|import|override)\b/g,'<span class="tok-key">$1</span>');x=x.replace(/\b(int|long|float|double|boolean|byte|short|char|var|void|String|Item|Block|Player|Level|BlockPos|BlockState|Component|Inventory|GuiGraphics|AbstractContainerScreen|AbstractContainerMenu|InteractionResult|InteractionHand)\b/g,'<span class="tok-type">$1</span>');x=x.replace(/\b\d+(?:\.\d+)?[fFdDlL]?\b/g,'<span class="tok-number">$&</span>');x=x.replace(/\b([A-Za-z_$][\w$]*)\s*(?=\()/g,'<span class="tok-method">$1</span>');return x.replace(/§§§([A-Z])§§§/g,(_,i)=>stash[i.charCodeAt(0)-65])}
 function highlightJson(s){let x=esc(s);x=x.replace(/(&quot;[^&]*?&quot;)\s*:/g,'<span class="tok-json-key">$1</span>:');return x.replace(/(:\s*)(&quot;.*?&quot;)/g,'$1<span class="tok-json-value">$2</span>')}
 function copyText(text,done){const ok=()=>{done();};if(navigator.clipboard&&window.isSecureContext){navigator.clipboard.writeText(text).then(ok).catch(fallback)}else fallback();function fallback(){const ta=document.createElement('textarea');ta.value=text;ta.setAttribute('readonly','');ta.style.position='fixed';ta.style.opacity='0';document.body.appendChild(ta);ta.select();try{document.execCommand('copy');ok()}finally{ta.remove()}}}
